@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Resultados - Rose Portal Advocacia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Biblioteca de Gráficos Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .brand-text {
+            color: #1a237e; /* Azul escuro corporativo */
+        }
+        .highlight-text {
+            color: #2e7d32; /* Verde para sucesso */
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+        .progress-bar-bg {
+            background-color: #e0e0e0;
+        }
+        .progress-bar-fill {
+            background-color: #4caf50; /* Verde sucesso */
+        }
+        .progress-bar-meta {
+            border-left: 2px dashed #d32f2f; /* Linha da meta em vermelho */
+        }
+        .table-striped tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <!-- Capa / Cover Page -->
+    <div class="w-full min-h-screen bg-white flex flex-col justify-center items-center p-8 text-center relative">
+<img src="logo-lidera.png" alt="Logo Lidera Soluções" class="w-48 h-auto mb-10">
+        <h1 class="text-4xl md:text-5xl font-bold brand-text mb-3">Dashboard de Resultados</h1>
+        <p class="text-2xl md:text-3xl text-gray-600 mb-10">Agosto de 2025</p>
+        <h2 class="text-2xl md:text-3xl font-semibold text-gray-800">Roselaine Portal Advocacia</h2>
+        <div class="absolute bottom-10 animate-bounce">
+            <svg class="w-8 h-8 text-gray-400" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                <path d="M19 9l-7 7-7-7"></path>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Início do Conteúdo do Relatório -->
+    <div class="report-content bg-f0f2f5">
+        <!-- Início da Página 1 -->
+        <div class="container mx-auto p-4 sm:p-6 md:p-8">
+            <!-- Cabeçalho -->
+            <header class="mb-8 p-6 card flex flex-col sm:flex-row justify-between items-center text-center sm:text-left">
+                <div>
+                    <h1 class="text-3xl font-bold brand-text">Análise de Performance</h1>
+                    <p class="text-lg text-gray-600">Cliente: Roselaine Portal Advocacia</p>
+                </div>
+                <div class="mt-4 sm:mt-0 text-right">
+                    <p class="text-sm font-semibold text-gray-800">Lidera Soluções</p>
+                    <p class="text-sm text-gray-500">Período: 11/08 a 31/08</p>
+                </div>
+            </header>
+
+            <!-- Destaque Principal: CPA -->
+            <section class="mb-8">
+                <div class="card p-6">
+                    <h2 class="text-xl font-semibold text-gray-700 mb-2">Principal Indicador: Custo por Aquisição (CPA)</h2>
+                    <div class="flex flex-col md:flex-row items-center justify-around gap-6">
+                        <div class="text-center">
+                            <p class="text-gray-500 text-lg">CPA Geral Alcançado</p>
+                            <p class="text-6xl font-bold highlight-text my-2">R$ 19,34</p>
+                            <div class="inline-flex items-center bg-green-100 text-green-800 text-md font-semibold px-4 py-1 rounded-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Resultado Positivo
+                            </div>
+                        </div>
+                        <div class="w-full md:w-1/2">
+                            <p class="font-medium text-gray-600">Comparativo: Meta vs. Resultado</p>
+                            <div class="mt-2 w-full">
+                                <div class="relative pt-1">
+                                    <div class="flex mb-2 items-center justify-between text-xs">
+                                        <div>
+                                            <span class="font-semibold text-green-600">Alcançado: R$ 19,34</span>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="font-semibold text-red-600">Meta: Até R$ 35,00</span>
+                                        </div>
+                                    </div>
+                                    <div class="overflow-hidden h-4 text-xs flex rounded-full bg-gray-200 relative">
+                                        <div style="width: 55.2%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-green-500 transition-all duration-500"></div>
+                                        <div class="absolute h-full progress-bar-meta" style="left: 100%;"></div>
+                                    </div>
+                                    <p class="text-sm text-gray-500 mt-2">O custo por aquisição ficou <span class="font-bold text-black">44,7%</span> abaixo do teto esperado.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Metas e Compromissos -->
+            <section class="mb-8">
+                <div class="card p-6">
+                    <h2 class="text-xl font-semibold text-gray-700 mb-4">Nossas Metas e Compromisso</h2>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-red-100 p-3 rounded-full flex-shrink-0 mt-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c9184a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold brand-text text-lg">Custo por Aquisição (CPA)</h3>
+                                <p class="text-gray-600 mt-1">Nosso compromisso principal é manter o CPA consistentemente <span class="font-bold">abaixo de R$ 35,00</span>, garantindo a máxima eficiência do investimento.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-green-100 p-3 rounded-full flex-shrink-0 mt-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold brand-text text-lg">Volume de Vendas (Contratos)</h3>
+                                <p class="text-gray-600 mt-1">A meta é gerar um mínimo de <span class="font-bold">100 contratos por equipe</span>. Atualmente (Ago/2025), as equipes do PR e RS operam na mesma conta de anúncios.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- KPIs Gerais -->
+            <section class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="card p-5 flex items-center"><div class="bg-blue-100 p-3 rounded-full mr-4"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div><div><p class="text-sm text-gray-500">Gasto Total</p><p class="text-2xl font-bold brand-text">R$ 2.494,52</p></div></div>
+                <div class="card p-5 flex items-center"><div class="bg-green-100 p-3 rounded-full mr-4"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div><div><p class="text-sm text-gray-500">Contratos Gerados</p><p class="text-2xl font-bold brand-text">129</p></div></div>
+                <div class="card p-5 flex items-center"><div class="bg-yellow-100 p-3 rounded-full mr-4"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a16207" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg></div><div><p class="text-sm text-gray-500">Leads Totais</p><p class="text-2xl font-bold brand-text">1.315</p></div></div>
+                <div class="card p-5 flex items-center"><div class="bg-indigo-100 p-3 rounded-full mr-4"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3730a3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></div><div><p class="text-sm text-gray-500">Impressões</p><p class="text-2xl font-bold brand-text">245.560</p></div></div>
+            </section>
+
+            <!-- Detalhamento por Estado -->
+            <section>
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">Detalhamento por Estado</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="card p-6">
+                        <h3 class="text-lg font-bold brand-text border-b pb-2 mb-4">Resultados - Rio Grande do Sul (RS)</h3>
+                        <div class="space-y-3 text-gray-600"><div class="flex justify-between"><span>Contratos:</span> <span class="font-bold text-black">128</span></div><div class="flex justify-between"><span>CPA (Custo por Aquisição):</span> <span class="font-bold text-green-600">R$ 15,64</span></div><div class="flex justify-between"><span>Leads Totais:</span> <span class="font-bold text-black">1.097</span></div><div class="flex justify-between"><span>CPL (Custo por Lead):</span> <span class="font-bold text-black">R$ 1,83</span></div></div>
+                    </div>
+                    <div class="card p-6 bg-gray-50">
+                        <h3 class="text-lg font-bold text-gray-700 border-b pb-2 mb-4">Resultados - Paraná (PR)</h3>
+                        <div class="space-y-3 text-gray-600"><div class="flex justify-between"><span>Contratos:</span> <span class="font-bold text-black">1</span></div><div class="flex justify-between"><span>CPA (Custo por Aquisição):</span> <span class="font-bold text-red-600">R$ 492,15</span></div><div class="flex justify-between"><span>Leads Totais:</span> <span class="font-bold text-black">218</span></div><div class="flex justify-between"><span>CPL (Custo por Lead):</span> <span class="font-bold text-black">R$ 2,26</span></div></div>
+                        <p class="text-xs text-gray-500 mt-4 pt-4 border-t">Nota: A performance no PR indica uma oportunidade de otimização. Apesar de gerar um volume considerável de leads a um CPL razoável, a conversão em contratos foi baixa, elevando significativamente o CPA.</p>
+                    </div>
+                </div>
+            </section>
+            <footer class="text-center mt-10 text-sm text-gray-400"><p>Página 1 de 2</p></footer>
+        </div>
+        <!-- Fim da Página 1 -->
+
+        <hr class="my-12 border-gray-300">
+
+        <!-- Início da Página 2 -->
+        <div class="container mx-auto p-4 sm:p-6 md:p-8">
+            <header class="mb-8 text-center">
+                <h1 class="text-3xl font-bold brand-text">Página 2: Análise Detalhada</h1>
+                <p class="text-lg text-gray-600">Evolução diária e comparativos</p>
+            </header>
+
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div class="card p-6"><h2 class="text-xl font-semibold text-gray-700 mb-4 text-center">Evolução Diária (CTR vs. Click-to-Lead)</h2><canvas id="evolutionChart"></canvas></div>
+                <div class="card p-6"><h2 class="text-xl font-semibold text-gray-700 mb-4 text-center">Custo por Lead (CPL) por Região</h2><canvas id="cplChart"></canvas></div>
+            </section>
+
+            <section class="mb-8">
+                <div class="card p-6">
+                    <h2 class="text-xl font-semibold text-gray-700 mb-4">Dados Detalhados por Dia</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-500 table-striped">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">Data</th>
+                                    <th scope="col" class="px-6 py-3 text-right">Impressões</th>
+                                    <th scope="col" class="px-6 py-3 text-right">Cliques</th>
+                                    <th scope="col" class="px-6 py-3 text-right">Leads</th>
+                                    <th scope="col" class="px-6 py-3 text-right">Gasto (R$)</th>
+                                    <th scope="col" class="px-6 py-3 text-right">CTR (%)</th>
+                                    <th scope="col" class="px-6 py-3 text-right">Click-to-Lead (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">11/08/2025</td><td class="px-6 py-4 text-right">15.413</td><td class="px-6 py-4 text-right">181</td><td class="px-6 py-4 text-right">20</td><td class="px-6 py-4 text-right">205,46</td><td class="px-6 py-4 text-right">1,17</td><td class="px-6 py-4 text-right">11,05</td></tr>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">12/08/2025</td><td class="px-6 py-4 text-right">20.458</td><td class="px-6 py-4 text-right">251</td><td class="px-6 py-4 text-right">85</td><td class="px-6 py-4 text-right">136,99</td><td class="px-6 py-4 text-right">1,23</td><td class="px-6 py-4 text-right">33,86</td></tr>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">13/08/2025</td><td class="px-6 py-4 text-right">8.131</td><td class="px-6 py-4 text-right">96</td><td class="px-6 py-4 text-right">110</td><td class="px-6 py-4 text-right">128,18</td><td class="px-6 py-4 text-right">1,18</td><td class="px-6 py-4 text-right">114,58</td></tr>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">14/08/2025</td><td class="px-6 py-4 text-right">6.967</td><td class="px-6 py-4 text-right">113</td><td class="px-6 py-4 text-right">67</td><td class="px-6 py-4 text-right">85,04</td><td class="px-6 py-4 text-right">1,62</td><td class="px-6 py-4 text-right">59,29</td></tr>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">15/08/2025</td><td class="px-6 py-4 text-right">14.440</td><td class="px-6 py-4 text-right">167</td><td class="px-6 py-4 text-right">86</td><td class="px-6 py-4 text-right">183,34</td><td class="px-6 py-4 text-right">1,16</td><td class="px-6 py-4 text-right">51,50</td></tr>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">16/08/2025</td><td class="px-6 py-4 text-right">12.895</td><td class="px-6 py-4 text-right">142</td><td class="px-6 py-4 text-right">83</td><td class="px-6 py-4 text-right">165,31</td><td class="px-6 py-4 text-right">1,10</td><td class="px-6 py-4 text-right">58,45</td></tr>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">17/08/2025</td><td class="px-6 py-4 text-right">21.497</td><td class="px-6 py-4 text-right">220</td><td class="px-6 py-4 text-right">111</td><td class="px-6 py-4 text-right">231,54</td><td class="px-6 py-4 text-right">1,02</td><td class="px-6 py-4 text-right">50,45</td></tr>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">18/08/2025</td><td class="px-6 py-4 text-right">19.446</td><td class="px-6 py-4 text-right">205</td><td class="px-6 py-4 text-right">114</td><td class="px-6 py-4 text-right">207,56</td><td class="px-6 py-4 text-right">1,05</td><td class="px-6 py-4 text-right">55,61</td></tr>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">19/08/2025</td><td class="px-6 py-4 text-right">11.956</td><td class="px-6 py-4 text-right">139</td><td class="px-6 py-4 text-right">73</td><td class="px-6 py-4 text-right">146,80</td><td class="px-6 py-4 text-right">1,16</td><td class="px-6 py-4 text-right">52,52</td></tr>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">20/08/2025</td><td class="px-6 py-4 text-right">11.624</td><td class="px-6 py-4 text-right">134</td><td class="px-6 py-4 text-right">68</td><td class="px-6 py-4 text-right">138,52</td><td class="px-6 py-4 text-right">1,15</td><td class="px-6 py-4 text-right">50,75</td></tr>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">21/08/2025</td><td class="px-6 py-4 text-right">9.327</td><td class="px-6 py-4 text-right">113</td><td class="px-6 py-4 text-right">67</td><td class="px-6 py-4 text-right">113,44</td><td class="px-6 py-4 text-right">1,21</td><td class="px-6 py-4 text-right">59,29</td></tr>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">22/08/2025</td><td class="px-6 py-4 text-right">9.700</td><td class="px-6 py-4 text-right">113</td><td class="px-6 py-4 text-right">56</td><td class="px-6 py-4 text-right">115,08</td><td class="px-6 py-4 text-right">1,16</td><td class="px-6 py-4 text-right">49,56</td></tr>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">23/08/2025</td><td class="px-6 py-4 text-right">7.727</td><td class="px-6 py-4 text-right">96</td><td class="px-6 py-4 text-right">39</td><td class="px-6 py-4 text-right">104,18</td><td class="px-6 py-4 text-right">1,24</td><td class="px-6 py-4 text-right">40,63</td></tr>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">24/08/2025</td><td class="px-6 py-4 text-right">9.109</td><td class="px-6 py-4 text-right">98</td><td class="px-6 py-4 text-right">40</td><td class="px-6 py-4 text-right">95,78</td><td class="px-6 py-4 text-right">1,08</td><td class="px-6 py-4 text-right">40,82</td></tr>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">25/08/2025</td><td class="px-6 py-4 text-right">6.586</td><td class="px-6 py-4 text-right">79</td><td class="px-6 py-4 text-right">35</td><td class="px-6 py-4 text-right">81,42</td><td class="px-6 py-4 text-right">1,20</td><td class="px-6 py-4 text-right">44,30</td></tr>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">26/08/2025</td><td class="px-6 py-4 text-right">6.492</td><td class="px-6 py-4 text-right">84</td><td class="px-6 py-4 text-right">41</td><td class="px-6 py-4 text-right">81,18</td><td class="px-6 py-4 text-right">1,29</td><td class="px-6 py-4 text-right">48,81</td></tr>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">27/08/2025</td><td class="px-6 py-4 text-right">7.247</td><td class="px-6 py-4 text-right">93</td><td class="px-6 py-4 text-right">53</td><td class="px-6 py-4 text-right">95,94</td><td class="px-6 py-4 text-right">1,28</td><td class="px-6 py-4 text-right">56,99</td></tr>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">28/08/2025</td><td class="px-6 py-4 text-right">7.642</td><td class="px-6 py-4 text-right">83</td><td class="px-6 py-4 text-right">39</td><td class="px-6 py-4 text-right">82,92</td><td class="px-6 py-4 text-right">1,09</td><td class="px-6 py-4 text-right">46,99</td></tr>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">29/08/2025</td><td class="px-6 py-4 text-right">9.245</td><td class="px-6 py-4 text-right">108</td><td class="px-6 py-4 text-right">46</td><td class="px-6 py-4 text-right">103,16</td><td class="px-6 py-4 text-right">1,17</td><td class="px-6 py-4 text-right">42,59</td></tr>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">30/08/2025</td><td class="px-6 py-4 text-right">11.535</td><td class="px-6 py-4 text-right">122</td><td class="px-6 py-4 text-right">35</td><td class="px-6 py-4 text-right">103,80</td><td class="px-6 py-4 text-right">1,06</td><td class="px-6 py-4 text-right">28,69</td></tr>
+                                <tr class="border-b"><td class="px-6 py-4 font-medium">31/08/2025</td><td class="px-6 py-4 text-right">15.623</td><td class="px-6 py-4 text-right">146</td><td class="px-6 py-4 text-right">27</td><td class="px-6 py-4 text-right">87,84</td><td class="px-6 py-4 text-right">0,93</td><td class="px-6 py-4 text-right">18,49</td></tr>
+                            </tbody>
+                            <tfoot class="font-semibold text-gray-800 bg-gray-100">
+                            <tr>
+                                    <td class="px-6 py-3">Total</td>
+                                    <td class="px-6 py-4 text-right">245.560</td>
+                                    <td class="px-6 py-4 text-right">2.894</td>
+                                    <td class="px-6 py-4 text-right">1.315</td>
+                                    <td class="px-6 py-4 text-right">2.494,52</td>
+                                    <td class="px-6 py-4 text-right">1,18</td>
+                                    <td class="px-6 py-4 text-right">45,44</td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Estratégias e Otimizações -->
+            <section class="mb-8">
+                <div class="card p-6">
+                    <h2 class="text-xl font-semibold text-gray-700 mb-2">Estratégias e Otimizações para a Próxima Campanha (Pernambuco)</h2>
+                    <p class="text-gray-600 mb-6">Com base nos excelentes resultados no RS e nos aprendizados com o PR, delineamos as seguintes estratégias para maximizar a performance da nova frente em Pernambuco.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Card 1: Segmentação Avançada -->
+                        <div class="p-5 rounded-lg bg-gray-50 border border-gray-200">
+                            <div class="flex items-center text-blue-600 mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.5A4.5 4.5 0 0 0 18 2h-3.5a4.5 4.5 0 0 0-1 8.5 4.5 4.5 0 0 0-1 8.5z"></path><path d="M12 20.94c-1.5 0-2.75 1.06-4 1.06-3 0-6-8-6-12.5A4.5 4.5 0 0 1 6 2h3.5a4.5 4.5 0 0 1 1 8.5 4.5 4.5 0 0 1 1 8.5z"></path></svg>
+                                <h3 class="font-semibold">Segmentação Avançada</h3>
+                            </div>
+                            <p class="text-sm text-gray-600">Analisar os dados demográficos e geográficos (cidades, bairros) dos leads convertidos no RS para replicar o público de alta conversão em Pernambuco.</p>
+                        </div>
+                        <!-- Card 2: Rastreamento e CRM -->
+                        <div class="p-5 rounded-lg bg-gray-50 border border-gray-200">
+                            <div class="flex items-center text-blue-600 mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M4.5 12a7.5 7.5 0 0 0 15 0h-15z"></path><path d="M22 12a10 10 0 0 0-20 0"></path><path d="M12 19a7.5 7.5 0 0 0 0-15v15z"></path></svg>
+                                <h3 class="font-semibold">Otimização do CRM</h3>
+                            </div>
+                            <p class="text-sm text-gray-600">Aprimorar o processo no CRM para facilitar o rastreamento das conversões online, garantindo uma visão clara da jornada do lead até a venda.</p>
+                        </div>
+                        <!-- Card 3: Análise de Funil -->
+                        <div class="p-5 rounded-lg bg-gray-50 border border-gray-200">
+                            <div class="flex items-center text-blue-600 mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M2.706 21.294A2 2 0 0 0 4.12 22h15.76a2 2 0 0 0 1.414-.706l-4.242-4.243-1.415 1.415-4.243-4.242-1.414 1.414-4.243-4.243-1.414 1.414z"></path></svg>
+                                <h3 class="font-semibold">Visibilidade do Funil</h3>
+                            </div>
+                            <p class="text-sm text-gray-600">Conceder à Lidera acesso aos dados de conversão para uma análise conjunta do funil de vendas, identificando e corrigindo possíveis gargalos.</p>
+                        </div>
+                        <!-- Card 4: Indicador ROAS -->
+                        <div class="p-5 rounded-lg bg-gray-50 border border-gray-200">
+                            <div class="flex items-center text-blue-600 mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                                <h3 class="font-semibold">Foco em ROAS</h3>
+                            </div>
+                            <p class="text-sm text-gray-600">Implementar o ROAS (Retorno sobre o Investimento em Anúncios) como principal indicador financeiro para guiar a alocação de verba entre as equipes.</p>
+                        </div>
+                        <!-- Card 5: Atendimento Imediato -->
+                        <div class="p-5 rounded-lg bg-gray-50 border border-gray-200">
+                            <div class="flex items-center text-blue-600 mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                                <h3 class="font-semibold">Atendimento Imediato</h3>
+                            </div>
+                            <p class="text-sm text-gray-600">Estruturar um atendimento inicial via SDR ou Chatbot para garantir que os leads gerados em fins de semana e feriados recebam uma resposta rápida.</p>
+                        </div>
+                        <!-- Card 6: Estrutura de Contato -->
+                        <div class="p-5 rounded-lg bg-gray-50 border border-gray-200">
+                            <div class="flex items-center text-blue-600 mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                                <h3 class="font-semibold">Estrutura de Contato</h3>
+                            </div>
+                            <p class="text-sm text-gray-600">Considerar o uso da API oficial do WhatsApp para estabilidade e treinar consultores para variarem as abordagens, evitando bloqueios por spam.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="text-center mt-10 text-sm text-gray-400"><p>Página 2 de 2</p></footer>
+        </div>
+        <!-- Fim da Página 2 -->
+    </div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // --- Dados para os Gráficos ---
+    const dailyLabels = ['11/08','12/08','13/08','14/08','15/08','16/08','17/08','18/08','19/08','20/08','21/08','22/08','23/08','24/08','25/08','26/08','27/08','28/08','29/08','30/08','31/08'];
+    const ctrData = [1.17,1.23,1.18,1.62,1.16,1.10,1.02,1.05,1.16,1.15,1.21,1.16,1.24,1.08,1.20,1.29,1.28,1.09,1.17,1.06,0.93];
+    const clickToLeadData = [11.05,33.86,114.58,59.29,51.50,58.45,50.45,55.61,52.52,50.75,59.29,49.56,40.63,40.82,44.30,48.81,56.99,46.99,42.59,28.69,18.49];
+    
+    // --- Gráfico de Evolução (Linhas) ---
+    const evolutionCtx = document.getElementById('evolutionChart').getContext('2d');
+    new Chart(evolutionCtx, {
+        type: 'line',
+        data: {
+            labels: dailyLabels,
+            datasets: [
+                {
+                    label: 'CTR (Taxa de Clique)',
+                    data: ctrData,
+                    borderColor: '#3b82f6', // Azul
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    yAxisID: 'y',
+                    tension: 0.3,
+                    fill: true,
+                },
+                {
+                    label: 'Click-to-Lead',
+                    data: clickToLeadData,
+                    borderColor: '#16a34a', // Verde
+                    backgroundColor: 'rgba(22, 163, 74, 0.1)',
+                    yAxisID: 'y1',
+                    tension: 0.3,
+                    fill: true,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            interaction: { mode: 'index', intersect: false },
+            scales: {
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    title: { display: true, text: 'CTR (%)' },
+                    ticks: { callback: value => value + '%' }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    title: { display: true, text: 'Click-to-Lead (%)' },
+                    grid: { drawOnChartArea: false },
+                    ticks: { callback: value => value + '%' }
+                }
+            },
+            plugins: { tooltip: { callbacks: { label: (context) => `${context.dataset.label}: ${context.formattedValue}%` } } }
+        }
+    });
+
+    // --- Gráfico de CPL (Barras) ---
+    const cplCtx = document.getElementById('cplChart').getContext('2d');
+    new Chart(cplCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Paraná (PR)', 'Rio Grande do Sul (RS)'],
+            datasets: [{
+                label: 'Custo por Lead (R$)',
+                data: [2.26, 1.83],
+                backgroundColor: ['rgba(239, 68, 68, 0.6)', 'rgba(34, 197, 94, 0.6)'],
+                borderColor: ['rgba(239, 68, 68, 1)', 'rgba(34, 197, 94, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            indexAxis: 'y',
+            scales: { x: { beginAtZero: true, title: { display: true, text: 'Valor (R$)' } } },
+            plugins: { legend: { display: false } }
+        }
+    });
+});
+</script>
+
+</body>
+</html>
+
