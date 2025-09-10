@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação da Marca - Roselaine Portal Advocacia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jura:wght@300;400;500;700&family=Prosto+One&family=Parisienne&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos Globais */
+        body {
+            font-family: 'Jura', sans-serif;
+            background-color: #fdfaf8;
+            color: #382C27;
+            margin: 0;
+            padding: 0 0 40px 0; /* Adiciona espaço no final para o rodapé não sobrepor */
+            overflow: hidden;
+        }
+
+        /* Container de Rolagem Horizontal */
+        .horizontal-container {
+            display: flex;
+            width: 1200vw; /* 100vw por seção (12 seções) */
+            height: 100vh;
+            will-change: transform;
+            transition: transform 1s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+
+        /* Estilo Padrão das Seções */
+        .section {
+            width: 100vw;
+            height: 100vh;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            box-sizing: border-box;
+            position: relative;
+            overflow: auto; /* Permite rolagem interna em telas pequenas */
+        }
+        @media (min-width: 768px) {
+            .section {
+                padding: 4rem;
+                overflow: hidden;
+            }
+        }
+
+        /* Definição das Fontes */
+        .font-display { font-family: 'Prosto One', cursive; }
+        .font-handwriting { font-family: 'Parisienne', cursive; }
+
+        /* Paleta de Cores */
+        .brand-brown { color: #382C27; }
+        .brand-rose { color: #C9A99A; }
+        .bg-brand-brown { background-color: #382C27; }
+        .bg-brand-rose { background-color: #C9A99A; }
+        .bg-brand-light { background-color: #fdfaf8; }
+
+        /* Padrão de Fundo Sutil */
+        .bg-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a99a' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        /* Estilo dos Mockups */
+        .mockup {
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            overflow: hidden;
+            background-color: #e0e0e0;
+        }
+        .mockup:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+        }
+        .mockup img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Navegação Inferior */
+        .navigation {
+            position: fixed;
+            bottom: 60px; /* Sobe um pouco para dar espaço ao footer */
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 10;
+        }
+        .nav-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #C9A99A;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+        .nav-dot.active {
+            background-color: #382C27;
+            transform: scale(1.3);
+            width: 30px;
+            border-radius: 8px;
+        }
+        
+        /* Animações de Entrada */
+        .animate-in {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .section.active .animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .section.active .delay-1 { transition-delay: 0.2s; }
+        .section.active .delay-2 { transition-delay: 0.4s; }
+        .section.active .delay-3 { transition-delay: 0.6s; }
+        .section.active .delay-4 { transition-delay: 0.8s; }
+
+        /* SVG dos Elementos Visuais */
+        .line-drawing {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            transition: stroke-dashoffset 2.5s ease-in-out 0.5s;
+        }
+        .section.active .line-drawing {
+            stroke-dashoffset: 0;
+        }
+
+        /* Rodapé */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 0;
+            background-color: rgba(253, 250, 248, 0.8);
+            backdrop-filter: blur(5px);
+            color: #382C27;
+            text-align: center;
+            font-size: 12px;
+            z-index: 20;
+            border-top: 1px solid rgba(56, 44, 39, 0.1);
+        }
+        .footer a {
+            color: #382C27;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer a:hover {
+            color: #C9A99A;
+        }
+
+
+        /* Scrollbar customizada (opcional) */
+        ::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="main-container" class="horizontal-container">
+        
+        <!-- Seção 1: Capa -->
+        <section class="section bg-brand-light flex-col">
+            <div class="text-center">
+                <img src="https://gemini-prod-uploads.s3.amazonaws.com/11252119139885871185/RPA%203.png" alt="Logo Roselaine Portal Advocacia" class="h-32 md:h-48 mx-auto mb-6 animate-in">
+                <h1 class="font-display text-4xl md:text-6xl brand-brown animate-in delay-1">Roselaine Portal</h1>
+                <p class="text-xl md:text-2xl brand-rose tracking-widest animate-in delay-2">ADVOCACIA</p>
+                <p class="mt-8 text-lg animate-in delay-3">Apresentação da Nova Identidade Visual</p>
+            </div>
+        </section>
+
+        <!-- Seção 2: O Conceito -->
+        <section class="section bg-brand-brown text-white bg-pattern">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center max-w-6xl">
+                <div class="text-center md:text-left">
+                    <h2 class="font-display text-3xl md:text-5xl text-brand-rose mb-6 animate-in">O Conceito</h2>
+                    <p class="mb-4 animate-in delay-1">A nova identidade de Roselaine Portal Advocacia foi desenhada para comunicar os pilares da marca: confiança, sofisticação e modernidade. Com especialização em direito bancário, a identidade visual projeta seriedade e precisão, alinhada a uma abordagem contemporânea que abrange atendimentos online e presenciais.</p>
+                    <p class="animate-in delay-2">O design equilibra o clássico e o novo, estabelecendo uma base de profissionalismo com o marrom sóbrio, enquanto o rosa queimado adiciona um toque sutil de elegância e diferenciação. A união destes elementos resulta em uma marca forte, memorável e perfeitamente alinhada ao seu público.</p>
+                </div>
+                <div class="flex justify-center animate-in delay-3 order-first md:order-last">
+                    <img src="https://gemini-prod-uploads.s3.amazonaws.com/11252119139885871185/RPA%204.png" alt="Logo com fundo escuro" class="max-h-60 md:max-h-80 rounded-lg">
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 3: Paleta de Cores -->
+        <section class="section bg-brand-light">
+            <div class="max-w-6xl w-full text-center">
+                <h2 class="font-display text-3xl md:text-5xl brand-brown mb-4 md:mb-8 animate-in">Paleta de Cores</h2>
+                <p class="max-w-3xl mx-auto mb-8 md:mb-12 animate-in delay-1">Uma paleta de cores concisa e estratégica, onde cada tom tem um propósito claro para criar hierarquia visual e transmitir as emoções certas.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 text-left">
+                    <div class="bg-white p-6 rounded-lg shadow-sm animate-in delay-2">
+                        <div class="w-full h-24 rounded bg-brand-brown mb-4"></div>
+                        <h3 class="font-display text-xl brand-brown">Marrom Sóbrio</h3>
+                        <p class="text-sm mt-2 space-y-1">
+                           <span><b>HEX:</b> #382C27</span><br>
+                           <span><b>RGB:</b> 56, 44, 39</span><br>
+                           <span><b>CMYK:</b> 60, 65, 70, 60</span>
+                        </p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm animate-in delay-3">
+                        <div class="w-full h-24 rounded bg-brand-rose mb-4"></div>
+                        <h3 class="font-display text-xl brand-brown">Rosa Queimado</h3>
+                         <p class="text-sm mt-2 space-y-1">
+                           <span><b>HEX:</b> #C9A99A</span><br>
+                           <span><b>RGB:</b> 201, 169, 154</span><br>
+                           <span><b>CMYK:</b> 21, 32, 35, 0</span>
+                        </p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm animate-in delay-4">
+                        <div class="w-full h-24 rounded bg-white border mb-4"></div>
+                        <h3 class="font-display text-xl brand-brown">Branco Neve</h3>
+                        <p class="text-sm mt-2 space-y-1">
+                           <span><b>HEX:</b> #FDFAF8</span><br>
+                           <span><b>RGB:</b> 253, 250, 248</span><br>
+                           <span><b>CMYK:</b> 1, 2, 2, 0</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 4: Tipografia -->
+        <section class="section bg-brand-rose text-white">
+            <div class="max-w-5xl w-full text-center">
+                <h2 class="font-display text-3xl md:text-5xl brand-brown mb-4 md:mb-8 animate-in">Tipografia</h2>
+                 <p class="max-w-3xl mx-auto mb-8 md:mb-12 text-gray-800 animate-in delay-1">A combinação de fontes foi escolhida para criar uma hierarquia clara e versátil, unindo impacto e legibilidade.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                    <div class="p-6 bg-white/20 rounded-lg animate-in delay-2 flex flex-col justify-between">
+                        <div>
+                            <p class="font-display text-5xl md:text-7xl brand-brown">Prosto One</p>
+                            <h3 class="font-bold mt-2 text-gray-800">Uso: Títulos e Destaques</h3>
+                            <p class="text-sm mt-2 text-gray-700">Com traços geométricos e forte presença, a Prosto One é moderna e impactante. Ideal para títulos, logos e chamadas, captura a atenção e transmite confiança imediata.</p>
+                        </div>
+                        <a href="https://fonts.google.com/specimen/Prosto+One" target="_blank" class="mt-4 inline-block bg-brand-brown text-white text-center text-sm font-bold py-2 px-4 rounded-lg hover:bg-opacity-80 transition-colors">Download da Fonte</a>
+                    </div>
+                    <div class="p-6 bg-white/20 rounded-lg animate-in delay-3 flex flex-col justify-between">
+                        <div>
+                            <p class="text-5xl md:text-7xl text-brand-brown">Jura</p>
+                            <h3 class="font-bold mt-2 text-gray-800">Uso: Textos e Parágrafos</h3>
+                            <p class="text-sm mt-2 text-gray-700">Uma fonte elegante com excelente legibilidade em meios digitais e impressos. Suas formas arredondadas e espaçamento claro a tornam perfeita para textos longos, garantindo uma leitura confortável.</p>
+                        </div>
+                         <a href="https://fonts.google.com/specimen/Jura" target="_blank" class="mt-4 inline-block bg-brand-brown text-white text-center text-sm font-bold py-2 px-4 rounded-lg hover:bg-opacity-80 transition-colors">Download da Fonte</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 5: Variações do Logo -->
+        <section class="section bg-brand-light">
+             <div class="text-center max-w-6xl w-full">
+                <h2 class="font-display text-3xl md:text-5xl brand-brown mb-12 animate-in">Versatilidade da Marca</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="bg-white p-10 rounded-lg shadow-md animate-in delay-1">
+                        <img src="https://gemini-prod-uploads.s3.amazonaws.com/11252119139885871185/RPA%203.png" alt="Logo com fundo claro" class="h-32 md:h-40 mx-auto">
+                        <p class="mt-4 font-semibold">Versão Principal</p>
+                        <p class="text-sm text-gray-600">Ideal para fundos claros, garantindo máxima legibilidade.</p>
+                    </div>
+                    <div class="bg-brand-brown p-10 rounded-lg shadow-md animate-in delay-2">
+                         <img src="https://gemini-prod-uploads.s3.amazonaws.com/11252119139885871185/RPA%204.png" alt="Logo com fundo escuro" class="h-32 md:h-40 mx-auto">
+                        <p class="mt-4 font-semibold text-white">Versão Negativa</p>
+                        <p class="text-sm text-gray-300">Perfeita para aplicação em fundos escuros ou fotográficos.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Seção 6: Elementos Visuais -->
+        <section class="section bg-brand-brown text-white bg-pattern">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center max-w-6xl">
+                <div class="text-center md:text-left">
+                    <h2 class="font-display text-3xl md:text-5xl text-brand-rose mb-6 animate-in">Elementos Visuais</h2>
+                    <p class="mb-4 animate-in delay-1">Para enriquecer a identidade, foram criados grafismos baseados nas linhas do próprio logo. Estes elementos adicionam dinamismo e podem ser usados como texturas, padrões de fundo ou detalhes em materiais gráficos, reforçando o reconhecimento da marca de forma sutil e elegante.</p>
+                </div>
+                <div class="flex justify-center items-center h-64 md:h-80 animate-in delay-2">
+                    <svg viewBox="0 0 400 200" class="w-full h-full">
+                        <path class="line-drawing" d="M 20 180 L 120 20 L 140 20" stroke="#C9A99A" stroke-width="2" fill="none" />
+                        <path class="line-drawing" d="M 100 180 L 200 20 L 220 20" stroke="#C9A99A" stroke-width="2" fill="none" style="transition-delay: 0.8s;"/>
+                        <path class="line-drawing" d="M 180 180 L 280 20 L 300 20" stroke="#C9A99A" stroke-width="2" fill="none" style="transition-delay: 1.1s;"/>
+                         <path class="line-drawing" d="M 260 180 L 360 20 L 380 20" stroke="#C9A99A" stroke-width="2" fill="none" style="transition-delay: 1.4s;"/>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 7: Aplicações (Mockups) 1/5 -->
+        <section class="section bg-brand-light">
+            <div class="text-center max-w-7xl w-full">
+                <h2 class="font-display text-3xl md:text-5xl brand-brown mb-8 md:mb-12 animate-in">A Marca em Ação</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="animate-in delay-1">
+                        <div class="mockup aspect-video"><img src="https://gemini-prod-uploads.s3.amazonaws.com/ec22849b-7517-48f8-b394-0f72f2679c29/Gemini_Generated_Image_ih8czxih8czxih8c.jpg" alt="Mockup de Ambiente"></div>
+                    </div>
+                    <div class="animate-in delay-2">
+                         <div class="mockup aspect-video"><img src="https://gemini-prod-uploads.s3.amazonaws.com/3f7ddb22-83b0-4628-910f-b1e967a6e118/Gemini_Generated_Image_cac5qmcac5qmcac5.jpg" alt="Mockup de Papelaria"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 8: Aplicações (Mockups) 2/5 -->
+        <section class="section bg-brand-light">
+            <div class="text-center max-w-7xl w-full">
+                <h2 class="font-display text-3xl md:text-5xl brand-brown mb-8 md:mb-12 animate-in">A Marca em Ação</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="animate-in delay-1">
+                        <div class="mockup aspect-video"><img src="https://placehold.co/1600x900/382C27/FDFAF8?text=Mockup+3" alt="Mockup 3"></div>
+                    </div>
+                    <div class="animate-in delay-2">
+                         <div class="mockup aspect-video"><img src="https://placehold.co/1600x900/C9A99A/FDFAF8?text=Mockup+4" alt="Mockup 4"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 9: Aplicações (Mockups) 3/5 -->
+        <section class="section bg-brand-light">
+            <div class="text-center max-w-7xl w-full">
+                <h2 class="font-display text-3xl md:text-5xl brand-brown mb-8 md:mb-12 animate-in">A Marca em Ação</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="animate-in delay-1">
+                        <div class="mockup aspect-video"><img src="https://placehold.co/1600x900/C9A99A/FDFAF8?text=Mockup+5" alt="Mockup 5"></div>
+                    </div>
+                    <div class="animate-in delay-2">
+                         <div class="mockup aspect-video"><img src="https://placehold.co/1600x900/382C27/FDFAF8?text=Mockup+6" alt="Mockup 6"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 10: Aplicações (Mockups) 4/5 -->
+        <section class="section bg-brand-light">
+            <div class="text-center max-w-7xl w-full">
+                <h2 class="font-display text-3xl md:text-5xl brand-brown mb-8 md:mb-12 animate-in">A Marca em Ação</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="animate-in delay-1">
+                        <div class="mockup aspect-video"><img src="https://placehold.co/1600x900/382C27/FDFAF8?text=Mockup+7" alt="Mockup 7"></div>
+                    </div>
+                    <div class="animate-in delay-2">
+                         <div class="mockup aspect-video"><img src="https://placehold.co/1600x900/C9A99A/FDFAF8?text=Mockup+8" alt="Mockup 8"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Seção 11: Aplicações (Mockups) 5/5 -->
+        <section class="section bg-brand-light">
+            <div class="text-center max-w-7xl w-full">
+                <h2 class="font-display text-3xl md:text-5xl brand-brown mb-8 md:mb-12 animate-in">A Marca em Ação</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="animate-in delay-1">
+                         <div class="mockup aspect-video"><img src="https://gemini-prod-uploads.s3.amazonaws.com/e9bb92d7-31d7-4b71-9875-108253a6f4a5/Gemini_Generated_Image_86ure186ure186ur.jpg" alt="Mockup de Website"></div>
+                    </div>
+                    <div class="animate-in delay-2">
+                         <div class="mockup aspect-video"><img src="https://placehold.co/1600x900/382C27/FDFAF8?text=Mockup+10" alt="Mockup 10"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 12: Encerramento -->
+        <section class="section bg-brand-brown text-white bg-pattern">
+            <div class="text-center max-w-3xl">
+                <img src="https://gemini-prod-uploads.s3.amazonaws.com/11252119139885871185/RPA%204.png" alt="Logo Roselaine Portal Advocacia" class="h-24 md:h-32 mx-auto mb-8 animate-in">
+                <h2 class="font-display text-3xl md:text-5xl text-brand-rose mb-6 animate-in delay-1">Um Novo Posicionamento</h2>
+                <p class="text-lg my-6 animate-in delay-2">Esta identidade visual é mais do que um novo logo. É uma ferramenta estratégica para consolidar o posicionamento da marca, comunicar valor e gerar novas oportunidades. Desejamos muito sucesso nesta nova e promissora etapa!</p>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Navegação e Rodapé -->
+    <div id="navigation" class="navigation"></div>
+    <footer class="footer">
+        Design Gráfico e Apresentação: 
+        <a href="https://www.instagram.com/ribasrodrigo91" target="_blank">Rodrigo Ribas @ribasrodrigo91</a> | 
+        <a href="https://www.instagram.com/somos.lidera" target="_blank">Lidera Soluções @somos.lidera</a>
+    </footer>
+
+
+    <script>
+        const container = document.getElementById('main-container');
+        const navigation = document.getElementById('navigation');
+        const sections = document.querySelectorAll('.section');
+        const totalSections = sections.length;
+        let currentSection = 0;
+        let isScrolling = false;
+        let touchStartX = 0;
+
+        for (let i = 0; i < totalSections; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('nav-dot');
+            dot.addEventListener('click', () => scrollToSection(i));
+            navigation.appendChild(dot);
+        }
+
+        const navDots = document.querySelectorAll('.nav-dot');
+
+        function updateNavigation() {
+            sections.forEach((section, index) => {
+                section.classList.toggle('active', index === currentSection);
+            });
+            navDots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSection);
+            });
+        }
+
+        function scrollToSection(sectionIndex) {
+            if (sectionIndex >= 0 && sectionIndex < totalSections) {
+                container.style.transform = `translateX(-${sectionIndex * 100}vw)`;
+                currentSection = sectionIndex;
+                updateNavigation();
+            }
+        }
+        
+        function handleWheel(event) {
+            if (isScrolling) return;
+            isScrolling = true;
+
+            if (event.deltaY > 0) {
+                scrollToSection(currentSection + 1);
+            } else {
+                scrollToSection(currentSection - 1);
+            }
+            setTimeout(() => { isScrolling = false; }, 1200);
+        }
+        
+        function handleKeyDown(event) {
+            if (isScrolling) return;
+            if (event.key === 'ArrowRight') {
+                isScrolling = true;
+                scrollToSection(currentSection + 1);
+                setTimeout(() => { isScrolling = false; }, 1200);
+            } else if (event.key === 'ArrowLeft') {
+                isScrolling = true;
+                scrollToSection(currentSection - 1);
+                setTimeout(() => { isScrolling = false; }, 1200);
+            }
+        }
+
+        function handleTouchStart(event) {
+            touchStartX = event.touches[0].clientX;
+        }
+
+        function handleTouchEnd(event) {
+            if (isScrolling) return;
+            const touchEndX = event.changedTouches[0].clientX;
+            const swipeThreshold = 50;
+
+            if (touchStartX - touchEndX > swipeThreshold) {
+                isScrolling = true;
+                scrollToSection(currentSection + 1);
+                setTimeout(() => { isScrolling = false; }, 1200);
+            } else if (touchEndX - touchStartX > swipeThreshold) {
+                isScrolling = true;
+                scrollToSection(currentSection - 1);
+                setTimeout(() => { isScrolling = false; }, 1200);
+            }
+        }
+
+        document.body.addEventListener('wheel', handleWheel, { passive: true });
+        document.addEventListener('keydown', handleKeyDown);
+        document.body.addEventListener('touchstart', handleTouchStart, { passive: true });
+        document.body.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+        updateNavigation();
+    </script>
+
+</body>
+</html>
+
