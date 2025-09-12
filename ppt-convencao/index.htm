@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação da Convenção - Roselaine Portal Advocacia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rpa-dark: #212529;
+            --rpa-gold: #c39a53;
+            --rpa-light-gold: #e8d8c2;
+            --rpa-bg: #ffffff;
+            --rpa-text: #343a40;
+        }
+        html, body {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; font-family: 'Montserrat', sans-serif; color: var(--rpa-text);
+        }
+        main {
+            width: 100%; height: 100%; display: flex;
+            transition: transform 0.6s ease-in-out;
+        }
+        .slide {
+            width: 100vw; height: 100vh; flex-shrink: 0;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 40px 80px; text-align: center; position: relative; background-color: var(--rpa-bg);
+        }
+        .slide-counter {
+            position: absolute; bottom: 30px; right: 40px; color: var(--rpa-gold);
+            font-weight: bold; font-size: 1.2rem; background-color: rgba(255,255,255,0.7);
+            padding: 5px 10px; border-radius: 5px;
+        }
+        .slide-title {
+            font-size: 4rem; font-weight: 900; margin-bottom: 1rem; color: var(--rpa-dark);
+        }
+        .slide-subtitle {
+            font-size: 1.8rem; max-width: 900px; margin-bottom: 2.5rem; color: #6c757d;
+        }
+        .slide-content { width: 100%; max-width: 1400px; }
+
+        .navigation-arrows {
+            position: fixed; bottom: 50%; width: 100%; display: flex;
+            justify-content: space-between; padding: 0 30px; transform: translateY(50%);
+            z-index: 100; pointer-events: none;
+        }
+        .nav-arrow {
+            color: var(--rpa-gold); font-size: 4rem; text-decoration: none; opacity: 0.2;
+            transition: opacity 0.3s, transform 0.3s; cursor: pointer; pointer-events: all;
+        }
+        .nav-arrow:hover { opacity: 1; transform: scale(1.1); }
+        .nav-arrow.hidden { opacity: 0; pointer-events: none; }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        .animated { visibility: hidden; }
+        .slide.active .animated { visibility: visible; animation: fadeInUp 0.8s ease-out forwards; }
+        .slide.active .animated.delay-1 { animation-delay: 0.2s; }
+        .slide.active .animated.delay-2 { animation-delay: 0.4s; }
+
+        .sub-item { opacity: 0; transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; transform: translateY(20px); }
+        .sub-item.visible { opacity: 1; transform: translateY(0); }
+
+        .org-chart .node { background-color: var(--rpa-dark); color: white; padding: 8px 16px; border-radius: 8px; border: 2px solid var(--rpa-gold); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .org-chart .node.level-2 { background-color: #495057; }
+        .org-chart .node.level-3 { background-color: #6c757d; }
+        .org-chart .node.level-4 { background-color: #adb5bd; }
+        .org-chart { display: flex; flex-direction: column; align-items: center; text-align: center; font-size: 0.85rem; } .org-chart ul { padding-left: 0; list-style: none; display: flex; justify-content: center; position: relative; } .org-chart li { display: flex; flex-direction: column; align-items: center; padding: 10px 5px; position: relative; } .org-chart li::before, .org-chart li::after { content: ''; position: absolute; background-color: var(--rpa-gold); } .org-chart ul > li::before { height: 20px; width: 2px; top: -20px; left: 50%; transform: translateX(-50%); } .org-chart ul > li::after { width: 100%; height: 2px; top: -20px; left: 0; } .org-chart ul > li:first-child::after { left: 50%; width: 50%; } .org-chart ul > li:last-child::after { width: 50%; } .org-chart ul > li:only-child::after { display: none; } .org-chart li > ul > li::before { top: -20px; } .org-chart li > .node + ul { margin-top: 40px; } .org-chart li > .node + ul::before { content: ''; position: absolute; background-color: var(--rpa-gold); width: 2px; height: 20px; top: -20px; left: 50%; transform: translateX(-50%); }
+    
+        .card-color-1 { background-color: #f8f9fa; }
+        .card-color-2 { background-color: rgba(232, 216, 194, 0.25); }
+        .card-color-3 { background-color: #f8f9fa; }
+        .card-color-4 { background-color: rgba(232, 216, 194, 0.25); }
+    </style>
+</head>
+<body>
+
+<main id="presentation-container">
+    <!-- Slide 1: Abertura e Boas-Vindas -->
+    <section class="slide active">
+        <div class="slide-content">
+            <h1 class="text-6xl font-black mb-4 animated">Sejam bem-vindos à primeira convenção</h1>
+            <h2 class="text-5xl font-bold animated delay-1" style="color: var(--rpa-gold);">Roselaine Portal Advocacia</h2>
+        </div>
+        <div class="slide-counter">1</div>
+    </section>
+
+    <!-- Slide 2: Histórico Pessoal -->
+    <section class="slide">
+        <h2 class="slide-title animated">Nossa Jornada</h2>
+        <p class="slide-subtitle animated delay-1">Um breve resumo do nosso histórico pessoal e profissional.</p>
+        <div class="slide-content text-2xl max-w-4xl text-left animated delay-2">
+            [Conteúdo sobre o histórico pessoal e da fundadora para ser inserido aqui.]
+        </div>
+        <div class="slide-counter">2</div>
+    </section>
+
+    <!-- Slide 3: Porque estamos aqui -->
+    <section class="slide">
+        <h2 class="slide-title animated">Porque Estamos Aqui Hoje</h2>
+        <p class="slide-subtitle animated delay-1">Para alinhar nossa visão, celebrar conquistas e traçar o futuro do nosso sucesso.</p>
+        <img src="porque_estamos_aqui.jpg" class="rounded-lg shadow-xl animated delay-2" style="max-width: 700px;" alt="Equipe reunida em colaboração">
+        <div class="slide-counter">3</div>
+    </section>
+
+    <!-- Slide 4: Apresentação da Equipe (Capa) -->
+    <section class="slide">
+        <h2 class="slide-title animated">Apresentação da Equipe</h2>
+        <p class="slide-subtitle animated delay-1">Conheça os talentos que impulsionam nosso sucesso.</p>
+        <div class="slide-content grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 animated delay-2">
+             <div class="text-center"><img src="bruna-scopel.jpg" class="rounded-full mx-auto mb-2 border-4" style="border-color: var(--rpa-gold);"><h3 class="font-bold text-xl">Bruna Scopel</h3></div>
+            <div class="text-center"><img src="claiton.jpg" class="rounded-full mx-auto mb-2 border-4" style="border-color: var(--rpa-gold);"><h3 class="font-bold text-xl">Claiton</h3></div>
+            <div class="text-center"><img src="bruno.jpg" class="rounded-full mx-auto mb-2 border-4" style="border-color: var(--rpa-gold);"><h3 class="font-bold text-xl">Bruno</h3></div>
+            <div class="text-center"><img src="bruna-advogada.jpg" class="rounded-full mx-auto mb-2 border-4" style="border-color: var(--rpa-gold);"><h3 class="font-bold text-xl">Bruna</h3></div>
+            <div class="text-center"><img src="victor.jpg" class="rounded-full mx-auto mb-2 border-4" style="border-color: var(--rpa-gold);"><h3 class="font-bold text-xl">Victor</h3></div>
+            <div class="text-center"><img src="simone.jpg" class="rounded-full mx-auto mb-2 border-4" style="border-color: var(--rpa-gold);"><h3 class="font-bold text-xl">Simone</h3></div>
+        </div>
+        <div class="slide-counter">4</div>
+    </section>
+
+    <!-- Slides Individuais -->
+    <section class="slide"><div class="slide-content flex flex-col items-center gap-8"><div class="w-1/2 md:w-1/3 animated"><img src="bruna-scopel.jpg" class="rounded-full shadow-2xl border-8" style="border-color: var(--rpa-light-gold);"></div><div class="text-center animated delay-1"><h2 class="text-7xl font-black">Bruna Scopel</h2></div></div><div class="slide-counter">5</div></section>
+    <section class="slide"><div class="slide-content flex flex-col items-center gap-8"><div class="w-1/2 md:w-1/3 animated"><img src="claiton.jpg" class="rounded-full shadow-2xl border-8" style="border-color: var(--rpa-light-gold);"></div><div class="text-center animated delay-1"><h2 class="text-7xl font-black">Claiton</h2></div></div><div class="slide-counter">6</div></section>
+    <section class="slide"><div class="slide-content flex flex-col items-center gap-8"><div class="w-1/2 md:w-1/3 animated"><img src="bruno.jpg" class="rounded-full shadow-2xl border-8" style="border-color: var(--rpa-light-gold);"></div><div class="text-center animated delay-1"><h2 class="text-7xl font-black">Bruno</h2></div></div><div class="slide-counter">7</div></section>
+    <section class="slide"><div class="slide-content flex flex-col items-center gap-8"><div class="w-1/2 md:w-1/3 animated"><img src="bruna-advogada.jpg" class="rounded-full shadow-2xl border-8" style="border-color: var(--rpa-light-gold);"></div><div class="text-center animated delay-1"><h2 class="text-7xl font-black">Bruna</h2></div></div><div class="slide-counter">8</div></section>
+    <section class="slide"><div class="slide-content flex flex-col items-center gap-8"><div class="w-1/2 md:w-1/3 animated"><img src="victor.jpg" class="rounded-full shadow-2xl border-8" style="border-color: var(--rpa-light-gold);"></div><div class="text-center animated delay-1"><h2 class="text-7xl font-black">Victor</h2></div></div><div class="slide-counter">9</div></section>
+    <section class="slide"><div class="slide-content flex flex-col items-center gap-8"><div class="w-1/2 md:w-1/3 animated"><img src="simone.jpg" class="rounded-full shadow-2xl border-8" style="border-color: var(--rpa-light-gold);"></div><div class="text-center animated delay-1"><h2 class="text-7xl font-black">Simone</h2></div></div><div class="slide-counter">10</div></section>
+
+    <!-- Slide 11: Atividade Interativa -->
+    <section class="slide">
+        <h2 class="slide-title animated">Atividade: Atendimento aos Leads</h2>
+        <p class="slide-subtitle animated delay-1">30 minutos para focarmos no que fazemos de melhor. Vamos converter!</p>
+        <div class="animated delay-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-40 w-40 mx-auto" style="color: var(--rpa-gold);" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+        </div>
+        <div class="slide-counter">11</div>
+    </section>
+    
+    <!-- Slide 12: Apresentação da Marca -->
+    <section class="slide">
+        <h2 class="slide-title animated">Apresentação da Marca</h2>
+        <p class="slide-subtitle animated delay-1">Conheça os pilares e a identidade visual que nos guiam.</p>
+        <a href="https://somoslidera.github.io/rpa/id-visual/rpa-id-visual.htm" target="_blank" class="animated delay-2 text-white font-bold py-4 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 inline-flex items-center" style="background-color: var(--rpa-gold); font-size: 1.5rem;">
+            Ver Manual da Marca
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+        </a>
+        <div class="slide-counter">12</div>
+    </section>
+
+    <!-- Slide 13: Coffee Break -->
+    <section class="slide">
+        <h2 class="slide-title animated">Coffee Break</h2>
+        <p class="slide-subtitle animated delay-1">Uma pausa para recarregar as energias.</p>
+        <img src="coffee-break.jpg" class="rounded-lg shadow-xl animated delay-2" style="max-width: 700px;" alt="[Imagem de uma mesa de coffee break com café e doces]">
+        <div class="slide-counter">13</div>
+    </section>
+
+    <!-- Slide 14: Estrutura Organizacional -->
+    <section class="slide">
+        <h2 class="slide-title animated">Estrutura da Empresa</h2>
+        <div class="slide-content org-chart animated delay-1" style="transform: scale(0.9);">
+             <ul><li><div class="node">Direção</div>
+                <ul>
+                    <li><div class="node level-2">Comercial</div>
+                        <ul><li><div class="node level-3">Adv</div>
+                            <ul><li><div class="node level-4">Lider</div>
+                                <ul><li><div class="node level-5">VD1</div></li><li><div class="node level-5">VD2</div></li></ul>
+                            </li></ul>
+                        </li></ul>
+                    </li>
+                    <li><div class="node level-2">Procurador</div>
+                        <ul><li><div class="node level-3">Adv</div>
+                            <ul>
+                                <li><div class="node level-4">Lider</div>
+                                    <ul><li><div class="node level-5">VD1</div></li><li><div class="node level-5">VD2</div></li></ul>
+                                </li>
+                                <li><div class="node level-4">Lider</div>
+                                    <ul><li><div class="node level-5">VD1</div></li><li><div class="node level-5">VD2</div></li></ul>
+                                </li>
+                            </ul>
+                        </li></ul>
+                    </li>
+                    <li><div class="node level-2">Financeiro</div>
+                        <ul><li><div class="node level-3">Assist</div></li></ul>
+                    </li>
+                    <li><div class="node level-2">Adm</div>
+                        <ul><li><div class="node level-3">Assist</div></li></ul>
+                    </li>
+                    <li><div class="node level-2">Marketing</div></li>
+                </ul>
+            </li></ul>
+        </div>
+        <div class="slide-counter">14</div>
+    </section>
+
+    <!-- Slide 15: Missão e Visão -->
+    <section class="slide">
+         <h2 class="slide-title animated">Nossos Pilares</h2>
+         <div class="slide-content grid grid-cols-1 md:grid-cols-2 gap-8 text-left text-xl">
+            <div class="sub-item bg-white p-8 rounded-lg shadow-lg border-t-8" style="border-color: var(--rpa-gold);"><h3 class="text-3xl font-bold mb-4">Missão</h3><p>Proporcionar ao consumidor acesso à justiça com transparência e acessibilidade.</p></div>
+            <div class="sub-item bg-white p-8 rounded-lg shadow-lg border-t-8" style="border-color: var(--rpa-gold);"><h3 class="text-3xl font-bold mb-4">Visão</h3><p>Ser reconhecido como um dos 10 maiores escritórios de advocacia digital do RGS até 2030.</p></div>
+        </div>
+        <div class="slide-counter">15</div>
+    </section>
+
+    <!-- Slide 16: Modelo de Negócio - Alvos -->
+    <section class="slide">
+        <h2 class="slide-title animated">Modelo de Negócio</h2>
+        <h3 class="slide-subtitle animated delay-1">Quem estamos protestando</h3>
+        <div class="slide-content grid grid-cols-2 md:grid-cols-5 gap-6 text-center text-xl font-bold">
+            <div class="sub-item p-6 bg-white rounded shadow-lg">Crefaz</div><div class="sub-item p-6 bg-white rounded shadow-lg">Piki</div><div class="sub-item p-6 bg-white rounded shadow-lg">Reallizi</div><div class="sub-item p-6 bg-white rounded shadow-lg">Mister Money</div><div class="sub-item p-6 bg-white rounded shadow-lg">Picpay</div><div class="sub-item p-6 bg-white rounded shadow-lg">Alesta</div><div class="sub-item p-6 bg-white rounded shadow-lg">Plancredi</div><div class="sub-item p-6 bg-white rounded shadow-lg">Supersim</div><div class="sub-item p-6 bg-white rounded shadow-lg">Banco Master</div><div class="sub-item p-6 bg-white rounded shadow-lg">Neoenergia</div>
+        </div>
+        <div class="slide-counter">16</div>
+    </section>
+
+    <!-- Slide 17: Modelo de Negócio - E-commerce -->
+    <section class="slide">
+         <h2 class="slide-title animated">Modelo de Negócio: E-Commerce</h2>
+         <div class="slide-content grid grid-cols-1 md:grid-cols-2 gap-8 text-left text-xl">
+            <div class="sub-item bg-white p-8 rounded-lg shadow-lg"><h3 class="text-3xl font-bold mb-4">Oportunidades</h3><ul class="list-disc list-inside space-y-3">
+                <li class="sub-item">Crescimento do modelo no Brasil</li>
+                <li class="sub-item">Facilidade de chegar no cliente</li>
+                <li class="sub-item">Legislação que não funciona</li>
+                <li class="sub-item">Cliente potencial para novos negócios</li>
+                <li class="sub-item">Atendimento diferenciado e cadastro potencial</li>
+            </ul></div>
+            <div class="sub-item bg-white p-8 rounded-lg shadow-lg"><h3 class="text-3xl font-bold mb-4">Dores do Cliente</h3><ul class="list-disc list-inside space-y-3">
+                <li class="sub-item">Assédio das financeiras</li>
+                <li class="sub-item">Facilidades em conseguir empréstimo</li>
+                <li class="sub-item">Contratos sem clareza</li>
+                <li class="sub-item">Cliente desprotegido</li>
+            </ul></div>
+        </div>
+        <div class="slide-counter">17</div>
+    </section>
+
+    <!-- Slide 18: Atendimento leads 2 -->
+    <section class="slide">
+        <h2 class="slide-title animated">Atividade: Atendimento aos Leads</h2>
+        <p class="slide-subtitle animated delay-1">Segunda rodada! Vamos manter o ritmo.</p>
+        <img src="atividade-interativa-2.jpg" class="rounded-lg shadow-xl animated delay-2" style="max-width: 700px;" alt="[Imagem de pessoas focadas trabalhando em notebooks]">
+        <div class="slide-counter">18</div>
+    </section>
+
+    <!-- Slide 19: Almoço -->
+    <section class="slide">
+        <h2 class="slide-title animated">Almoço</h2>
+        <p class="slide-subtitle animated delay-1">Até às 13h30. Bom apetite!</p>
+        <img src="almoco-restaurante.jpg" class="rounded-lg shadow-xl animated delay-2" style="max-width: 700px;" alt="[Imagem de um prato de comida em um restaurante elegante]">
+        <div class="slide-counter">19</div>
+    </section>
+
+    <!-- Slide 20: Atividade Recreativa -->
+    <section class="slide">
+        <h2 class="slide-title animated">Atividade Recreativa</h2>
+        <p class="slide-subtitle animated delay-1">Momento de descontração e integração da equipe.</p>
+        <img src="recreacao-convencao.jpg" class="rounded-lg shadow-xl animated delay-2" style="max-width: 700px;" alt="[Imagem de uma dinâmica de grupo profissional e descontraída]">
+        <div class="slide-counter">20</div>
+    </section>
+
+    <!-- Slide 21: Modelo de Operação -->
+    <section class="slide">
+        <h2 class="slide-title animated">Modelo de Operação</h2>
+        <div class="slide-content flex flex-col lg:flex-row gap-10 items-center">
+            <div class="flex-1 sub-item"><img src="estrategia.jpg" class="rounded-lg shadow-lg w-full h-full object-cover"></div>
+            <div class="flex-1 bg-white p-8 rounded-lg shadow-lg text-left"><h3 class="text-3xl font-bold mb-4 sub-item">Nossa Estratégia</h3><ul class="list-disc list-inside space-y-3 text-xl">
+                <li class="sub-item"><strong>Pesquisa de Campo:</strong> Análise de decisões, rentabilidade e nichos.</li>
+                <li class="sub-item"><strong>Gravação de Vídeos:</strong> Abordando dificuldades, erros, ganchos e interesse.</li>
+                <li class="sub-item"><strong>Captação:</strong> Formato otimizado para redes sociais.</li>
+                <li class="sub-item"><strong>Atendimento ao Cliente:</strong> A importância do primeiro contato.</li>
+                <li class="sub-item"><strong>Estrutura de Grupos:</strong> Modelo com líder e atendente focado em E-commerce.</li>
+            </ul></div>
+        </div>
+        <div class="slide-counter">21</div>
+    </section>
+
+    <!-- Slide 22: Expansão Geográfica (Tabela) -->
+    <section class="slide">
+        <h2 class="slide-title animated">Estados Potenciais</h2>
+        <p class="slide-subtitle animated delay-1">Mapeamento de oportunidades com base populacional.</p>
+        <div class="slide-content animated delay-2">
+            <table class="w-full text-2xl bg-white shadow-lg rounded-lg">
+                <thead><tr class="border-b-4" style="border-color: var(--rpa-gold);"><th class="p-4 text-left">Estado</th><th class="p-4 text-right">População</th></tr></thead>
+                <tbody>
+                    <tr class="sub-item border-b"><td class="p-4 text-left">São Paulo</td><td class="p-4 text-right">45.0 milhões</td></tr>
+                    <tr class="sub-item border-b bg-gray-50"><td class="p-4 text-left">Minas Gerais</td><td class="p-4 text-right">21.0 milhões</td></tr>
+                    <tr class="sub-item border-b"><td class="p-4 text-left">Rio de Janeiro</td><td class="p-4 text-right">17.0 milhões</td></tr>
+                    <tr class="sub-item border-b bg-gray-50"><td class="p-4 text-left">Bahia</td><td class="p-4 text-right">14.8 milhões</td></tr>
+                    <tr class="sub-item border-b"><td class="p-4 text-left">Paraná</td><td class="p-4 text-right">11.8 milhões</td></tr>
+                    <tr class="sub-item border-b bg-gray-50"><td class="p-4 text-left">Rio Grande do Sul</td><td class="p-4 text-right">11.6 milhões</td></tr>
+                    <tr class="sub-item border-b"><td class="p-4 text-left">Pernambuco</td><td class="p-4 text-right">9.6 milhões</td></tr>
+                    <tr class="sub-item border-b bg-gray-50"><td class="p-4 text-left">Ceará</td><td class="p-4 text-right">9.2 milhões</td></tr>
+                    <tr class="sub-item border-b"><td class="p-4 text-left">Pará</td><td class="p-4 text-right">8.6 milhões</td></tr>
+                    <tr class="sub-item bg-gray-50"><td class="p-4 text-left">Santa Catarina</td><td class="p-4 text-right">8.0 milhões</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="slide-counter">22</div>
+    </section>
+
+    <!-- Slide 23: Líderes e Advogadas -->
+    <section class="slide">
+        <h2 class="slide-title animated">Líderes de Grupos e Advogadas</h2>
+        <img src="lideres-advogadas.jpg" class="rounded-lg shadow-xl animated delay-2" style="max-width: 800px;">
+        <div class="slide-counter">23</div>
+    </section>
+
+    <!-- Slide 24: Coffee Break 2 -->
+    <section class="slide">
+        <h2 class="slide-title animated">Coffee Break</h2>
+        <p class="slide-subtitle animated delay-1">Nossa última pausa antes da reta final.</p>
+        <img src="coffee-break-2.jpg" class="rounded-lg shadow-xl animated delay-2" style="max-width: 700px;" alt="[Imagem de xícaras de café e pessoas conversando]">
+        <div class="slide-counter">24</div>
+    </section>
+    
+    <!-- Slide 25: Atendimento leads 3 -->
+    <section class="slide">
+        <h2 class="slide-title animated">Atividade: Atendimento aos Leads</h2>
+        <p class="slide-subtitle animated delay-1">Reta final! Vamos dar o nosso melhor.</p>
+        <div class="animated delay-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-40 w-40 mx-auto" style="color: var(--rpa-gold);" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" /></svg>
+        </div>
+        <div class="slide-counter">25</div>
+    </section>
+
+    <!-- Slide 26: Novos Produtos -->
+    <section class="slide">
+        <h2 class="slide-title animated">Novos Produtos em Estudo</h2>
+        <div class="slide-content grid grid-cols-2 md:grid-cols-3 gap-6 text-left text-xl">
+            <div class="sub-item flex items-center gap-4 bg-white p-6 rounded-lg shadow-md"> <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" style="color:var(--rpa-gold)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg> <span>Desconto em conta corrente</span></div>
+            <div class="sub-item flex items-center gap-4 bg-white p-6 rounded-lg shadow-md"> <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" style="color:var(--rpa-gold)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg> <span>Financiamento com celular como garantia</span></div>
+            <div class="sub-item flex items-center gap-4 bg-white p-6 rounded-lg shadow-md"> <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" style="color:var(--rpa-gold)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg> <span>Financiamento em lojas de crediário</span></div>
+            <div class="sub-item flex items-center gap-4 bg-white p-6 rounded-lg shadow-md"> <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" style="color:var(--rpa-gold)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> <span>Vendas casadas (seguro, taxa de adesão)</span></div>
+            <div class="sub-item flex items-center gap-4 bg-white p-6 rounded-lg shadow-md"> <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" style="color:var(--rpa-gold)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg> <span>Revisão de financiamento de carros</span></div>
+            <div class="sub-item flex items-center gap-4 bg-white p-6 rounded-lg shadow-md"> <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" style="color:var(--rpa-gold)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg> <span>Trabalhistas</span></div>
+        </div>
+        <div class="slide-counter">26</div>
+    </section>
+
+    <!-- Slide 27: Projeções de Crescimento - Faturamento -->
+    <section class="slide">
+        <h2 class="slide-title animated">Projeção da Empresa: Faturamento</h2>
+        <div class="slide-content bg-white p-6 rounded-lg shadow-xl animated delay-2" style="height: 60vh;"><canvas id="faturamentoChart"></canvas></div>
+        <div class="slide-counter">27</div>
+    </section>
+
+    <!-- Slide 28: Projeções de Crescimento - Processos e Grupos -->
+    <section class="slide">
+        <h2 class="slide-title animated">Projeção da Empresa: Operacional</h2>
+        <div class="slide-content bg-white p-6 rounded-lg shadow-xl animated delay-2" style="height: 60vh;"><canvas id="operacionalChart"></canvas></div>
+        <div class="slide-counter">28</div>
+    </section>
+    
+    <!-- Slide 29: Metas para 2026 -->
+    <section class="slide">
+        <h2 class="slide-title animated">Projeção para 2026</h2>
+        <div class="slide-content flex justify-center">
+            <ul class="text-left bg-white p-10 rounded-lg text-2xl space-y-4 shadow-xl border-l-8" style="border-color: var(--rpa-gold);">
+                <li class="sub-item">🎯 Atuação em mais dois novos nichos de mercado</li>
+                <li class="sub-item">🎯 Estruturação de 7 grupos de vendas</li>
+                <li class="sub-item">🎯 Distribuição de atuação em 3 Estados</li>
+                <li class="sub-item">🎯 Trabalhar com no máximo 2 grupos por Estado do mesmo tema</li>
+                <li class="sub-item">🎯 Mapear oportunidades em todo Brasil</li>
+                <li class="sub-item">🎯 Concentrar em direito bancário, mas abrir caminhos em outros segmentos</li>
+            </ul>
+        </div>
+        <div class="slide-counter">29</div>
+    </section>
+
+    <!-- Slide 30: Formato de Atuação -->
+    <section class="slide">
+        <h2 class="slide-title animated">Formato de Atuação</h2>
+        <div class="slide-content grid grid-cols-1 md:grid-cols-2 gap-8 text-left text-lg">
+            <div class="sub-item bg-white p-8 rounded-lg shadow-lg card-color-1"><h3 class="font-bold text-2xl mb-3">Autonomia</h3><p>Grupos independentes (e-commerce). Advogado fica ligado ao escritório. Cada líder define seu grupo e o seu formato de atuação.</p></div>
+            <div class="sub-item bg-white p-8 rounded-lg shadow-lg card-color-2"><h3 class="font-bold text-2xl mb-3">Meritocracia</h3><p>Cada grupo recebe leads pela média de conversão. O grupo com conversão maior terá verba de marketing maior. O que não performar por 3 meses, perderá verba.</p></div>
+            <div class="sub-item bg-white p-8 rounded-lg shadow-lg card-color-3"><h3 class="font-bold text-2xl mb-3">Suporte e Metas</h3><p>O escritório terá assessoramento permanente de equipes de marketing. A meta sempre será mínima, não existindo meta máxima.</p></div>
+            <div class="sub-item bg-white p-8 rounded-lg shadow-lg card-color-4"><h3 class="font-bold text-2xl mb-3">Responsabilidade</h3><p>O líder do grupo será responsável por providenciar toda a documentação. Toda documentação será de responsabilidade do captador em qualquer etapa do processo.</p></div>
+        </div>
+        <div class="slide-counter">30</div>
+    </section>
+
+    <!-- Slide 31: Premiação 1 -->
+    <section class="slide">
+        <h2 class="slide-title animated">Premiações do Dia</h2>
+        <div class="slide-content flex flex-col items-center justify-center text-5xl space-y-6 animated delay-1">
+           <p class="font-black">🏆</p>
+           <p>Premiação do vendedor com melhores resultados na conversão.</p>
+        </div>
+        <div class="slide-counter">31</div>
+    </section>
+
+    <!-- Slide 32: Premiação 2 -->
+    <section class="slide">
+        <h2 class="slide-title animated">Premiações do Dia</h2>
+        <div class="slide-content flex flex-col items-center justify-center text-5xl space-y-6 animated delay-1">
+           <p class="font-black">🎁</p>
+           <p>Lembrança para cada colaborador.</p>
+        </div>
+        <div class="slide-counter">32</div>
+    </section>
+
+    <!-- Slide 33: Premiação 3 -->
+    <section class="slide">
+        <h2 class="slide-title animated">Premiações do Dia</h2>
+        <div class="slide-content flex flex-col items-center justify-center text-5xl space-y-6 animated delay-1">
+           <p class="font-black">🥇</p>
+           <p>Premiação para o melhor resultado do dia.</p>
+        </div>
+        <div class="slide-counter">33</div>
+    </section>
+
+    <!-- Slide 34: Encerramento -->
+    <section class="slide">
+        <div class="bg-white p-16 rounded-lg animated">
+            <p class="text-7xl font-bold" style="color: var(--rpa-gold);">Agradecemos a todos. <br>O futuro começa agora!</p>
+        </div>
+        <div class="slide-counter">34</div>
+    </section>
+</main>
+
+<div class="navigation-arrows">
+    <a class="nav-arrow prev" onclick="navigate(-1)">&#8592;</a>
+    <a class="nav-arrow next" onclick="navigate(1)">&#8594;</a>
+</div>
+
+<script>
+    const presentationContainer = document.getElementById('presentation-container');
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    let currentSlide = 0;
+    let currentStep = 0;
+
+    const prevArrow = document.querySelector('.nav-arrow.prev');
+    const nextArrow = document.querySelector('.nav-arrow.next');
+    const slideCounters = document.querySelectorAll('.slide-counter');
+
+    // Chart instances and data
+    let faturamentoChartInstance, operacionalChartInstance;
+    const faturamentoFullData = [100000, 1000000, 3000000, 7000000, 12000000, 16000000];
+    const faturamentoFullLabels = ['Dez/25', 'Dez/26', 'Dez/27', 'Dez/28', 'Dez/29', 'Dez/30'];
+    const operacionalFullData = {
+        processos: [1000, 2000, 2500, 3000, 3500, 4000],
+        grupos: [3, 7, 10, 13, 16, 20]
+    };
+    const operacionalFullLabels = ['Dez/25', 'Dez/26', 'Dez/27', 'Dez/28', 'Dez/29', 'Dez/30'];
+
+    function updateCounters() {
+        slideCounters.forEach((counter, index) => {
+            counter.textContent = `${index + 1} / ${totalSlides}`;
+        });
+    }
+
+    function updateView() {
+        presentationContainer.style.transform = `translateX(-${currentSlide * 100}vw)`;
+        slides.forEach((slide, index) => {
+            if (index === currentSlide && !slide.classList.contains('active')) {
+                slide.classList.add('active');
+                initializeChart(currentSlide);
+            } else if (index !== currentSlide) {
+                slide.classList.remove('active');
+            }
+        });
+        prevArrow.classList.toggle('hidden', currentSlide === 0 && currentStep === 0);
+        nextArrow.classList.toggle('hidden', currentSlide === totalSlides - 1 && allStepsShown());
+    }
+
+    function allStepsShown() {
+        const subItems = slides[currentSlide].querySelectorAll('.sub-item');
+        if (slides[currentSlide].querySelector('#faturamentoChart')) return currentStep >= faturamentoFullData.length;
+        if (slides[currentSlide].querySelector('#operacionalChart')) return currentStep >= operacionalFullLabels.length;
+        return subItems.length === 0 || currentStep >= subItems.length;
+    }
+
+    function navigate(direction) {
+        const subItems = slides[currentSlide].querySelectorAll('.sub-item');
+        const isFaturamentoChartSlide = slides[currentSlide].querySelector('#faturamentoChart');
+        const isOperacionalChartSlide = slides[currentSlide].querySelector('#operacionalChart');
+
+        if (direction === 1) { // Forward
+            if (isFaturamentoChartSlide && currentStep < faturamentoFullData.length) {
+                faturamentoChartInstance.data.labels.push(faturamentoFullLabels[currentStep]);
+                faturamentoChartInstance.data.datasets[0].data.push(faturamentoFullData[currentStep]);
+                faturamentoChartInstance.update();
+                currentStep++;
+            } else if (isOperacionalChartSlide && currentStep < operacionalFullLabels.length) {
+                operacionalChartInstance.data.labels.push(operacionalFullLabels[currentStep]);
+                operacionalChartInstance.data.datasets[0].data.push(operacionalFullData.processos[currentStep]);
+                operacionalChartInstance.data.datasets[1].data.push(operacionalFullData.grupos[currentStep]);
+                operacionalChartInstance.update();
+                currentStep++;
+            } else if (!allStepsShown()) {
+                subItems[currentStep].classList.add('visible');
+                currentStep++;
+            } else if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                currentStep = 0;
+            }
+        } else { // Backward
+            if (currentStep > 0) {
+                currentStep--;
+                if(isFaturamentoChartSlide) {
+                    faturamentoChartInstance.data.labels.pop();
+                    faturamentoChartInstance.data.datasets[0].data.pop();
+                    faturamentoChartInstance.update();
+                } else if (isOperacionalChartSlide) {
+                    operacionalChartInstance.data.labels.pop();
+                    operacionalChartInstance.data.datasets[0].data.pop();
+                    operacionalChartInstance.data.datasets[1].data.pop();
+                    operacionalChartInstance.update();
+                } else {
+                    subItems[currentStep].classList.remove('visible');
+                }
+            } else if (currentSlide > 0) {
+                currentSlide--;
+                const prevSubItems = slides[currentSlide].querySelectorAll('.sub-item');
+                const prevIsFaturamento = slides[currentSlide].querySelector('#faturamentoChart');
+                const prevIsOperacional = slides[currentSlide].querySelector('#operacionalChart');
+
+                if(prevIsFaturamento) currentStep = faturamentoFullData.length;
+                else if (prevIsOperacional) currentStep = operacionalFullLabels.length;
+                else currentStep = prevSubItems.length; 
+            }
+        }
+        updateView();
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') navigate(1);
+        else if (e.key === 'ArrowLeft') navigate(-1);
+    });
+    
+    updateCounters();
+    updateView();
+
+    // Chart.js configuration
+    Chart.register(ChartDataLabels);
+    Chart.defaults.font.size = 16;
+    Chart.defaults.color = '#333';
+
+    function initializeChart(slideIndex) {
+        if(slideIndex === 26) { // Faturamento Chart slide index
+            if(faturamentoChartInstance) faturamentoChartInstance.destroy();
+            faturamentoChartInstance = new Chart(document.getElementById('faturamentoChart'), {
+                type: 'line', data: { labels: [], datasets: [{ label: 'Faturamento Projetado (R$)', data: [], backgroundColor: 'rgba(33, 37, 41, 0.1)', borderColor: '#c39a53', borderWidth: 4, tension: 0.2, pointBackgroundColor: '#c39a53', pointRadius: 6, fill: true }] },
+                options: { animation: { duration: 500 }, responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'end', offset: -8, formatter: (v) => v >= 1000000 ? `R$ ${(v/1000000).toFixed(1)}M` : `R$ ${(v/1000)}k`, font: { weight: 'bold', size: 14 }, color: '#212529', backgroundColor: 'rgba(255, 255, 255, 0.6)', borderRadius: 4, padding: 4 } } }
+            });
+        }
+        if(slideIndex === 27) { // Operacional Chart slide index
+            if(operacionalChartInstance) operacionalChartInstance.destroy();
+            operacionalChartInstance = new Chart(document.getElementById('operacionalChart'), {
+                type: 'bar', data: { labels: [], datasets: [{ label: 'Nº de Processos', data: [], backgroundColor: '#212529', yAxisID: 'y' }, { label: 'Nº de Grupos', data: [], backgroundColor: '#c39a53', yAxisID: 'y1' }] },
+                options: { animation: { duration: 500 }, responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: 'Processos' } }, y1: { beginAtZero: true, display: true, position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Grupos' }, suggestedMax: 25 } }, plugins: { datalabels: { color: 'white', font: { weight: 'bold' } } } }
+            });
+        }
+    }
+</script>
+</body>
+</html>
+
