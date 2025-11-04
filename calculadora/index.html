@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Juros Abusivos - Roselaine Portal Advocacia</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jura:wght@300;400;500;700&family=Prosto+One&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- ESTILOS DA MARCA (do seu HTML) --- */
+        
+        body {
+            font-family: 'Jura', sans-serif;
+            background-color: #fdfaf8; /* bg-brand-light */
+            color: #382C27; /* brand-brown */
+            margin: 0;
+            padding: 0;
+            overflow-y: auto; 
+        }
+
+        .font-display { font-family: 'Prosto One', cursive; }
+        .font-body { font-family: 'Jura', sans-serif; }
+
+        .brand-brown { color: #382C27; }
+        .brand-rose { color: #C9A99A; }
+        .bg-brand-brown { background-color: #382C27; }
+        .bg-brand-rose { background-color: #C9A99A; }
+        .bg-brand-light { background-color: #fdfaf8; }
+
+        .bg-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a99a' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        /* --- NOVOS ESTILOS PARA A LANDING PAGE --- */
+
+        .form-label {
+            font-family: 'Jura', sans-serif;
+            font-weight: 700;
+            color: #382C27; 
+            margin-bottom: 0.5rem;
+            display: block;
+            font-size: 1.1rem;
+        }
+        
+        /* Estilo para Select (dropdown) e Input */
+        .form-input {
+            font-family: 'Jura', sans-serif;
+            border: 2px solid #C9A99A; 
+            background-color: #ffffff;
+            color: #382C27; 
+            border-radius: 0.5rem; 
+            padding: 0.75rem 1rem;
+            width: 100%;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            -webkit-appearance: none; /* Remove estilo padrão do iOS */
+            -moz-appearance: none; /* Remove estilo padrão do Firefox */
+            appearance: none; /* Remove estilo padrão */
+            background-position: right 1rem center;
+            background-repeat: no-repeat;
+            background-size: 1em;
+            /* SVG de seta para o dropdown */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23382C27'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd' /%3E%3C/svg%3E");
+        }
+        
+        /* O input de número não deve ter a seta */
+        input.form-input {
+            background-image: none;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #382C27; 
+            box-shadow: 0 0 0 3px rgba(56, 44, 39, 0.2);
+        }
+
+        .calc-button {
+            font-family: 'Prosto One', cursive;
+            background-color: #382C27; 
+            color: white;
+            padding: 0.85rem 1.5rem;
+            border-radius: 0.5rem; 
+            text-align: center;
+            font-size: 1.25rem;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .calc-button:hover {
+            background-color: #5a4a44; 
+        }
+
+        /* Botão de CTA (WhatsApp) - VERMELHO/PERSUASIVO */
+        .cta-button-high {
+            font-family: 'Prosto One', cursive;
+            background-color: #D32F2F; /* Vermelho Alerta */
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem; 
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(211, 47, 47, 0.3);
+        }
+        .cta-button-high:hover {
+            background-color: #B71C1C; /* Vermelho mais escuro */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(211, 47, 47, 0.4);
+        }
+        .cta-button-high svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-right: 0.75rem;
+        }
+
+        /* Seção de Resultados (Wrapper) */
+        #results-section {
+            scroll-margin-top: 2rem; 
+            padding-top: 6rem;
+            padding-bottom: 6rem;
+            display: none; /* Começa escondida */
+        }
+        
+        /* Card de Resultado (Inicia escondido) */
+        .result-card {
+            display: none;
+        }
+
+        /* ----- Exit Intent Popup ----- */
+        #exit-popup-overlay {
+            display: none; /* Começa escondido */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 99;
+            align-items: center;
+            justify-content: center;
+        }
+        #exit-popup {
+            background-color: #fdfaf8;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            border-top: 6px solid #D32F2F; /* Destaque vermelho */
+            position: relative;
+        }
+        #close-popup {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            font-size: 2rem;
+            line-height: 1;
+            cursor: pointer;
+            color: #C9A99A;
+        }
+        #close-popup:hover {
+            color: #382C27;
+        }
+    </style>
+</head>
+<body class="bg-brand-light">
+
+    <div id="main-container">
+
+        <section class="section bg-brand-light min-h-screen flex flex-col justify-center py-16 px-6">
+            <div class="text-center max-w-3xl mx-auto">
+                <img src="RPA-Logo-Marrom_Sobrio.png" alt="Roselaine Portal Advocacia" class="h-20 md:h-24 mx-auto mb-8">
+                
+                <h1 class="font-display text-4xl md:text-5xl brand-brown">
+                    Você está pagando juros abusivos?
+                </h1>
+                <p class="font-body text-xl md:text-2xl brand-rose mt-4 mb-8 tracking-wide">
+                    Descubra em 30 segundos se a taxa do seu empréstimo está acima da média do mercado.
+                </p>
+            </div>
+
+            <div class="max-w-xl mx-auto mt-10 w-full bg-white p-8 md:p-10 rounded-xl shadow-xl border border-brand-rose/30">
+                <h2 class="font-display text-2xl md:text-3xl brand-brown text-center mb-6">Calculadora Rápida</h2>
+                <div class="space-y-6">
+                    
+                    <div>
+                        <label class="form-label">Mês e Ano do seu Contrato:</label>
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <select id="input-month" class="form-input md:w-1/2">
+                                <option value="">Selecione o Mês</option>
+                                <option value="01">Janeiro</option>
+                                <option value="02">Fevereiro</option>
+                                <option value="03">Março</option>
+                                <option value="04">Abril</option>
+                                <option value="05">Maio</option>
+                                <option value="06">Junho</option>
+                                <option value="07">Julho</option>
+                                <option value="08">Agosto</option>
+                                <option value="09">Setembro</option>
+                                <option value="10">Outubro</option>
+                                <option value="11">Novembro</option>
+                                <option value="12">Dezembro</option>
+                            </select>
+                            <select id="input-year" class="form-input md:w-1/2">
+                                <option value="">Selecione o Ano</option>
+                                <option value="2020">2020</option>
+                                <option value="2021">2021</option>
+                                <option value="2022">2022</option>
+                                <option value="2023">2023</option>
+                            </select>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2 font-body">Selecione a data em que assinou.</p>
+                    </div>
+                    
+                    <div>
+                        <label for="input-rate" class="form-label">Taxa de Juros Mensal do Contrato (%):</label>
+                        <input type="number" id="input-rate" class="form-input" placeholder="Ex: 2.5" step="0.01">
+                        <p class="text-sm text-gray-500 mt-1 font-body">Digite a taxa que consta no seu contrato. Use vírgula ou ponto.</p>
+                    </div>
+                    <button onclick="calculateInterest()" class="calc-button">
+                        Verificar Agora
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="results-section" class="bg-brand-rose bg-pattern">
+            
+            <div id="result-high" class="result-card max-w-3xl mx-auto text-center px-6">
+                <h2 class="font-display text-4xl md:text-5xl text-red-700">ATENÇÃO!</h2>
+                <p class="font-body text-2xl md:text-3xl text-gray-800 mt-4 mb-8">
+                    Sua taxa de juros está <strong class="text-red-700">ACIMA</strong> da média do mercado.
+                </p>
+
+                <div class="bg-white p-6 rounded-lg shadow-xl border-4 border-red-600">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left text-xl">
+                        <div class="text-center p-4 border-b md:border-b-0 md:border-r border-gray-200">
+                            <p class="font-display brand-brown text-lg">Sua Taxa Mensal:</p>
+                            <p id="user-rate-high" class="font-display text-4xl md:text-5xl text-red-600 font-bold">0.00%</p>
+                        </div>
+                        <div class="text-center p-4">
+                            <p class="font-display brand-rose text-lg">Média BACEN (no mês):</p>
+                            <p id="bacen-rate-high" class="font-display text-4xl md:text-5xl brand-rose font-bold">0.00%</p>
+                        </div>
+                    </div>
+                    <p class="font-body text-xl text-gray-800 mt-6 text-center">
+                        Você está pagando <strong id="difference-rate" class="font-bold text-red-600">0.00%</strong> a mais do que a média. 
+                        Isso é um forte indício de <strong class="font-bold">juros abusivos</strong> e você pode ter direito a uma revisão imediata do seu contrato!
+                    </p>
+                </div>
+                
+                <div id="cta-block-high" class="mt-10">
+                    <h3 class="font-display text-2xl md:text-3xl text-white mb-4">Não perca mais dinheiro.</h3>
+                    <p class="text-lg text-gray-800 mb-8 max-w-2xl mx-auto font-body">
+                        Envie sua análise para nosso time de especialistas e descubra se você tem direito a uma revisão do seu contrato. A consulta é 100% gratuita e sigilosa.
+                    </p>
+                    
+                    <a href="https://api.whatsapp.com/send?phone=SEUNUMEROAQUI&text=Olá!%20Usei%20a%20calculadora%20e%20gostaria%20de%20uma%20análise%20gratuita." 
+                       id="whatsapp-link-high" 
+                       class="cta-button-high"
+                       target="_blank">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12.04 2C6.58 2 2.13 6.45 2.13 12c0 1.76.46 3.42 1.25 4.9L2 22l5.3-1.38c1.42.72 2.97 1.15 4.59 1.15 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zM12.04 20.15c-1.48 0-2.88-.39-4.1-1.05l-.3-.18-3.07.8.82-3c-.2-.3-.36-.62-.53-.97-.7-1.46-1.12-3.1-1.12-4.83 0-4.4 3.57-7.97 7.97-7.97s7.97 3.57 7.97 7.97-3.57 7.97-7.97 7.97zm4.84-6.17c-.26-.13-1.56-.77-1.8-.9s-.42-.13-.6 0-.68.77-.84.92-.3.18-.56 0a7.28 7.28 0 0 1-2.14-1.32c-.56-.47-.94-1.05-1.05-1.23s0-.28.12-.4l.26-.3c.12-.13.18-.23.26-.38.08-.15.04-.28 0-.4L9.08 8.98c-.1-.23-.2-.28-.3-.28s-.2 0-.28 0-.38 0-.52.23c-.15.2-.53.52-.53 1.28s.55 1.48.62 1.58.98 1.5 2.4 2.12c.33.15.58.2.78.25.32.08.6.05.82-.08.26-.15.77-.63.88-.84.1-.2.1-.4 0-.52l-.18-.3z"/>
+                        </svg>
+                        SOLICITAR REVISÃO AGORA
+                    </a>
+                </div>
+            </div>
+
+            <div id="result-low" class="result-card max-w-3xl mx-auto text-center px-6">
+                <h2 class="font-display text-4xl md:text-5xl text-green-700">ANÁLISE CONCLUÍDA</h2>
+                <p class="font-body text-2xl md:text-3xl text-gray-800 mt-4 mb-8">
+                    Sua taxa de juros está <strong class="text-green-700">DENTRO</strong> dos padrões do mercado.
+                </p>
+
+                <div class="bg-white p-6 rounded-lg shadow-xl border-4 border-green-600">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left text-xl">
+                        <div class="text-center p-4 border-b md:border-b-0 md:border-r border-gray-200">
+                            <p class="font-display brand-brown text-lg">Sua Taxa Mensal:</p>
+                            <p id="user-rate-low" class="font-display text-4xl md:text-5xl text-green-600 font-bold">0.00%</p>
+                        </div>
+                        <div class="text-center p-4">
+                            <p class="font-display brand-rose text-lg">Média BACEN (no mês):</p>
+                            <p id="bacen-rate-low" class="font-display text-4xl md:text-5xl brand-rose font-bold">0.00%</p>
+                        </div>
+                    </div>
+                    <p class="font-body text-xl text-gray-800 mt-6 text-center">
+                        Pela nossa análise inicial, sua taxa está compatível com a média do Banco Central para a época do contrato.
+                        <br><br>
+                        Neste caso, uma ação de revisão de juros <strong class="font-bold">não é indicada.</strong>
+                    </p>
+                </div>
+            </div>
+
+        </section>
+
+        <footer class="text-center p-8 bg-brand-light border-t border-brand-rose/20">
+            <p class="brand-brown text-sm font-body">
+                © 2025 Roselaine Portal Advocacia. Todos os direitos reservados.
+            </p>
+            <p class="brand-brown text-xs mt-2 font-body opacity-70">
+                Design por Lidera Soluções | Rodrigo Ribas
+            </p>
+        </footer>
+
+    </div>
+
+    <div id="exit-popup-overlay" class="flex">
+        <div id="exit-popup">
+            <span id="close-popup" onclick="closeExitPopup()">&times;</span>
+            <h2 class="font-display text-3xl brand-brown">Tem certeza?</h2>
+            <p class="font-body text-lg my-6">
+                Você está a um passo de descobrir se pode <strong class="text-red-700">reduzir sua dívida</strong> e recuperar o dinheiro pago indevidamente. 
+                Nossa análise é <strong class="brand-brown">100% gratuita e sem compromisso</strong>. Não desista agora!
+            </p>
+            <a href="https://api.whatsapp.com/send?phone=SEUNUMEROAQUI&text=Olá!%20Quase%20desisti,%20mas%20quero%20minha%20análise%20gratuita%20sobre%20juros%20abusivos."
+               target="_blank"
+               class="cta-button-high w-full"
+               onclick="closeExitPopup()"> QUERO MINHA ANÁLISE GRATUITA
+            </a>
+            <button class="font-body text-sm text-gray-500 mt-4 hover:underline" onclick="closeExitPopup()">
+                Não, obrigado. Quero continuar pagando juros.
+            </button>
+        </div>
+    </div>
+
+
+    <script>
+        // Dados do BACEN (extraídos do seu CSV)
+        const bacenRates = {
+            "2020-08-01": 1.45, "2020-09-01": 1.43, "2020-10-01": 1.45, "2020-11-01": 1.46, "2020-12-01": 1.47,
+            "2021-01-01": 1.55, "2021-02-01": 1.53, "2021-03-01": 1.58, "2021-04-01": 1.62, "2021-05-01": 1.62,
+            "2021-06-01": 1.64, "2021-07-01": 1.67, "2021-08-01": 1.72, "2021-09-01": 1.8,  "2021-10-01": 1.86,
+            "2021-11-01": 2.04, "2021-12-01": 2.0,
+            "2022-01-01": 2.0,  "2022-02-01": 1.98, "2022-03-01": 2.02, "2022-04-01": 2.03, "2022-05-01": 2.02,
+            "2022-06-01": 2.04, "2022-07-01": 2.05, "2022-08-01": 2.04, "2022-09-01": 2.02, "2022-10-01": 2.03,
+            "2022-11-01": 2.06, "2022-12-01": 2.12,
+            "2023-01-01": 2.15, "2023-02-01": 2.14, "2023-03-01": 2.12, "2023-04-01": 2.11, "2023-05-01": 2.08,
+            "2023-06-01": 2.0,  "2023-07-01": 1.95, "2023-08-01": 1.96, "2023-09-01": 1.94
+        };
+        
+        // Flag global para o popup de saída
+        window.showExitPopup = false;
+
+        function calculateInterest() {
+            // 1. Obter elementos do HTML
+            const selectedMonth = document.getElementById('input-month').value;
+            const selectedYear = document.getElementById('input-year').value;
+            const rateInput = document.getElementById('input-rate').value;
+            
+            const resultsSection = document.getElementById('results-section');
+            const resultHigh = document.getElementById('result-high');
+            const resultLow = document.getElementById('result-low');
+            
+            // 2. Validar Inputs
+            if (!selectedMonth || !selectedYear || !rateInput) {
+                alert("Por favor, preencha o mês, o ano e a sua taxa de juros.");
+                return;
+            }
+
+            const userRate = parseFloat(rateInput.replace(',', '.'));
+            if (isNaN(userRate)) {
+                alert("Por favor, insira um número válido para a taxa de juros.");
+                return;
+            }
+            
+            // 4. Formatar data e buscar taxa BACEN
+            // Converte "AAAA" e "MM" para "AAAA-MM-01"
+            const formattedDate = `${selectedYear}-${selectedMonth}-01`;
+            const bacenRate = bacenRates[formattedDate];
+
+            if (!bacenRate) {
+                alert("Não temos dados para esta data. Por favor, selecione uma data entre Agosto/2020 e Setembro/2023.");
+                return;
+            }
+            
+            // 5. Comparar taxas e exibir o card correto
+            if (userRate > bacenRate) {
+                // --- CENÁRIO: JUROS ALTOS ---
+                const difference = userRate - bacenRate;
+                
+                // Preencher dados
+                document.getElementById('user-rate-high').textContent = userRate.toFixed(2) + "%";
+                document.getElementById('bacen-rate-high').textContent = bacenRate.toFixed(2) + "%";
+                document.getElementById('difference-rate').textContent = difference.toFixed(2) + "%";
+                
+                // Gerar link do WhatsApp
+                const waText = `Olá! Usei a calculadora e descobri que minha taxa de ${userRate.toFixed(2)}% está ACIMA da média BACEN de ${bacenRate.toFixed(2)}% (em ${selectedMonth}/${selectedYear}). Tenho direito a uma revisão?`;
+                const whatsappLink = document.getElementById('whatsapp-link-high');
+                const baseWALink = whatsappLink.href.split('?')[0]; 
+                whatsappLink.href = `${baseWALink}?text=${encodeURIComponent(waText)}`;
+                
+                // Exibir card
+                resultHigh.style.display = 'block';
+                resultLow.style.display = 'none';
+                
+                // Ativar o popup de saída
+                window.showExitPopup = true;
+
+            } else {
+                // --- CENÁRIO: JUROS NORMAIS ---
+                
+                // Preencher dados
+                document.getElementById('user-rate-low').textContent = userRate.toFixed(2) + "%";
+                document.getElementById('bacen-rate-low').textContent = bacenRate.toFixed(2) + "%";
+                
+                // Exibir card
+                resultHigh.style.display = 'none';
+                resultLow.style.display = 'block';
+                
+                // Desativar o popup de saída
+                window.showExitPopup = false;
+            }
+            
+            // 8. Exibir a seção de resultados e rolar até ela
+            resultsSection.style.display = 'block';
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // --- LÓGICA DO POPUP DE SAÍDA (EXIT INTENT) ---
+        
+        function showExitPopup() {
+            document.getElementById('exit-popup-overlay').style.display = 'flex';
+        }
+        
+        function closeExitPopup() {
+            document.getElementById('exit-popup-overlay').style.display = 'none';
+            // Desativa o popup para não mostrar novamente na mesma sessão
+            window.showExitPopup = false; 
+        }
+
+        // Adiciona o listener de mouse
+        document.addEventListener('mouseleave', function(e) {
+            // Verifica se o mouse está saindo para o topo da janela
+            // E se a flag `showExitPopup` foi ativada pelo cálculo
+            if (e.clientY <= 0 && window.showExitPopup) {
+                showExitPopup();
+            }
+        });
+    </script>
+
+</body>
+</html>
