@@ -203,7 +203,7 @@
                                 <option value="03">Março</option>
                                 <option value="04">Abril</option>
                                 <option value="05">Maio</option>
-                                <option value="06">Junho</option>
+a                              <option value="06">Junho</option>
                                 <option value="07">Julho</option>
                                 <option value="08">Agosto</option>
                                 <option value="09">Setembro</option>
@@ -214,7 +214,8 @@
                             <select id="input-year" class="form-input md:w-1/2">
                                 <option value="">Selecione o Ano</option>
                                 <option value="2020">2020</option>
-                                <option value="2021">2021</option>
+          
+                              <option value="2021">2021</option>
                                 <option value="2022">2022</option>
                                 <option value="2023">2023</option>
                             </select>
@@ -323,7 +324,7 @@
                 Você está a um passo de descobrir se pode <strong class="text-red-700">reduzir sua dívida</strong> e recuperar o dinheiro pago indevidamente. 
                 Nossa análise é <strong class="brand-brown">100% gratuita e sem compromisso</strong>. Não desista agora!
             </p>
-                _         <a href="https://wa.me/5551980656598?text=Olá!%20Quase%20desisti,%20mas%20quero%20minha%20análise%20gratuita%20sobre%20juros%20abusivos."
+                        <a href="https://wa.me/5551980656598?text=Olá!%20Quase%20desisti,%20mas%20quero%20minha%20análise%20gratuita%20sobre%20juros%20abusivos."
                target="_blank"
                class="cta-button-high w-full"
                onclick="closeExitPopup()"> QUERO MINHA ANÁLISE GRATUITA
@@ -339,7 +340,7 @@
         // Dados do BACEN (extraídos do seu CSV)
         const bacenRates = {
             "2020-08-01": 1.45, "2020-09-01": 1.43, "2020-10-01": 1.45, "2020-11-01": 1.46, "2020-12-01": 1.47,
-            "2021-01-01": 1.55, "2021-02-01": 1.53, "2021-03-01": 1.58, "2021-04-01": 1.62, "2021-05-01": 1.62,
+            "2021-01-01": 1.55, "2021-2-01": 1.53, "2021-03-01": 1.58, "2021-04-01": 1.62, "2021-05-01": 1.62,
             "2021-06-01": 1.64, "2021-07-01": 1.67, "2021-08-01": 1.72, "2021-09-01": 1.8,  "2021-10-01": 1.86,
             "2021-11-01": 2.04, "2021-12-01": 2.0,
             "2022-01-01": 2.0,  "2022-02-01": 1.98, "2022-03-01": 2.02, "2022-04-01": 2.03, "2022-05-01": 2.02,
@@ -397,9 +398,8 @@
                 // Gerar link do WhatsApp
                 const waText = `Olá! Usei a calculadora e descobri que minha taxa de ${userRate.toFixed(2)}% está ACIMA da média BACEN de ${bacenRate.toFixed(2)}% (em ${selectedMonth}/${selectedYear}). Tenho direito a uma revisão?`;
                 const whatsappLink = document.getElementById('whatsapp-link-high');
-                
-                // **** LÓGICA CORRIGIDA ****
-                // Agora ele pega a base (https://wa.me/5551980656598) e adiciona o texto
+                
+                // LÓGICA CORRIGIDA (pega o href base 'wa.me/numero' e adiciona o texto)
                 const baseWALink = whatsappLink.href.split('?')[0]; 
                 whatsappLink.href = `${baseWALink}?text=${encodeURIComponent(waText)}`;
                 
@@ -443,7 +443,7 @@
         }
 
         // Adiciona o listener de mouse
-        document.addEventListener('mouseleave', function(e) {
+Não       document.addEventListener('mouseleave', function(e) {
             // Verifica se o mouse está saindo para o topo da janela
             // E se a flag `showExitPopup` foi ativada pelo cálculo
             if (e.clientY <= 0 && window.showExitPopup) {
