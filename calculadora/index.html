@@ -265,7 +265,7 @@
                         Envie sua análise para nosso time de especialistas e descubra se você tem direito a uma revisão do seu contrato. A consulta é 100% sigilosa.
                     </p>
                     
-                    <a href="https://api.whatsapp.com/send?phone=5551980656598&text=Olá!%20Usei%20a%20calculadora%20e%20gostaria%20de%20uma%20análise%20gratuita." 
+                    <a href="https://wa.me/5551980656598" 
                        id="whatsapp-link-high" 
                        class="cta-button-high"
                        target="_blank">
@@ -323,7 +323,8 @@
                 Você está a um passo de descobrir se pode <strong class="text-red-700">reduzir sua dívida</strong> e recuperar o dinheiro pago indevidamente. 
                 Nossa análise é <strong class="brand-brown">100% gratuita e sem compromisso</strong>. Não desista agora!
             </p>
-            <a href="https://api.whatsapp.com/send?phone=5551980656598&text=Olá!%20Quase%20desisti,%20mas%20quero%20minha%20análise%20gratuita%20sobre%20juros%20abusivos."
+            
+            <a href="https://wa.me/5551980656598?text=Olá!%20Quase%20desisti,%20mas%20quero%20minha%20análise%20gratuita%20sobre%20juros%20abusivos."
                target="_blank"
                class="cta-button-high w-full"
                onclick="closeExitPopup()"> QUERO MINHA ANÁLISE GRATUITA
@@ -394,12 +395,21 @@
                 document.getElementById('bacen-rate-high').textContent = bacenRate.toFixed(2) + "%";
                 document.getElementById('difference-rate').textContent = difference.toFixed(2) + "%";
                 
-                // Gerar link do WhatsApp
+                // ========== MUDANÇA #3 AQUI ==========
+                // Lógica do JavaScript corrigida para não perder o número de telefone
+                
+                // Gerar link do WhatsApp com a mensagem dinâmica
                 const waText = `Olá! Usei a calculadora e descobri que minha taxa de ${userRate.toFixed(2)}% está ACIMA da média BACEN de ${bacenRate.toFixed(2)}% (em ${selectedMonth}/${selectedYear}). Tenho direito a uma revisão?`;
                 const whatsappLink = document.getElementById('whatsapp-link-high');
-                const baseWALink = whatsappLink.href.split('?')[0]; 
+                
+                // Pega o 'href' base (que definimos no HTML como 'https://wa.me/5551980656598')
+                const baseWALink = whatsappLink.href; 
+                
+                // Define o link final com o número BASE + a MENSAGEM dinâmica
                 whatsappLink.href = `${baseWALink}?text=${encodeURIComponent(waText)}`;
                 
+                // =====================================
+
                 // Exibir card
                 resultHigh.style.display = 'block';
                 resultLow.style.display = 'none';
