@@ -11,10 +11,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Jura:wght@300;400;500;700&family=Prosto+One&display=swap" rel="stylesheet">
     
     <style>
+        /* --- MUDANÇA #1: Tema Escuro Invertido --- */
         body {
             font-family: 'Jura', sans-serif;
-            background-color: #fdfaf8; /* bg-brand-light */
-            color: #382C27; /* brand-brown */
+            background-color: #382C27; /* bg-brand-brown */
+            color: #fdfaf8; /* brand-light (para o texto padrão) */
             margin: 0;
             padding: 0;
             overflow-y: auto;  
@@ -28,6 +29,7 @@
         .bg-brand-rose { background-color: #C9A99A; }
         .bg-brand-light { background-color: #fdfaf8; }
 
+        /* --- NENHUMA MUDANÇA AQUI: Os estilos do formulário (que está no card branco) estão perfeitos --- */
         .form-label {
             font-family: 'Jura', sans-serif;
             font-weight: 700;
@@ -55,12 +57,10 @@
             background-size: 1em;
         }
         
-        /* Adiciona seta para o 'select' */
         select.form-input {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23382C27'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd' /%3E%3C/svg%3E");
         }
         
-        /* Inputs normais não devem ter seta */
         input.form-input {
             background-image: none;
         }
@@ -71,9 +71,8 @@
             box-shadow: 0 0 0 3px rgba(56, 44, 39, 0.2);
         }
 
-        /* Estilo para inputs inválidos (quando o 'required' falha) */
         .form-input:invalid {
-            border-color: #D32F2F; /* Vermelho alerta */
+            border-color: #D32F2F; 
         }
 
         .calc-button {
@@ -99,13 +98,14 @@
         }
     </style>
 </head>
-<body class="bg-brand-light">
+<body class="bg-brand-brown">
 
     <section class="min-h-screen flex flex-col justify-center py-16 px-6">
         <div class="text-center max-w-3xl mx-auto">
-            <img src="RPA-Logo-Marrom_Sobrio.png" alt="Roselaine Portal Advocacia" class="h-20 md:h-24 mx-auto mb-8">
             
-            <h1 class="font-display text-4xl md:text-5xl brand-brown">
+            <img src="RPA-Logo-Branco.png" alt="Roselaine Portal Advocacia" class="h-20 md:h-24 mx-auto mb-8">
+            
+            <h1 class="font-display text-4xl md:text-5xl text-white">
                 Descubra se Você Paga Juros Abusivos
             </h1>
             <p class="font-body text-xl md:text-2xl brand-rose mt-4 mb-8 tracking-wide">
@@ -146,9 +146,8 @@
         </div>
     </section>
 
-    <footer class="text-center p-8 bg-brand-light border-t border-brand-rose/20">
-        <p class="brand-brown text-sm font-body">
-            © 2025 Roselaine Portal Advocacia. Todos os direitos reservados.
+    <footer class="text-center p-8 bg-brand-brown border-t border-brand-rose/20">
+        <p class="brand-rose text-sm font-body"> © 2025 Roselaine Portal Advocacia. Todos os direitos reservados.
         </p>
     </footer>
 
@@ -159,48 +158,40 @@
         const loadingMessage = document.getElementById('loading-message');
 
         // ==================================================================
-        // ======> AQUI! Cole a URL do seu Apps Script aqui <======
+        // URL DO SEU APPSCRIPT (ESTÁ CORRETA)
         // ==================================================================
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzbbCxmY_8QmqvTUSapJgI_xYNTFZmyLiUDlJnU98VvCm4kJu3w-myv7ZwKGBu9iifW/exec'; 
         // ==================================================================
 
 
         form.addEventListener('submit', function(e) {
-          e.preventDefault(); // Impede o envio padrão do formulário
+          e.preventDefault(); 
 
-          // Mostra o 'loading' e desativa o botão
           submitButton.disabled = true;
           submitButton.textContent = 'Enviando...';
           loadingMessage.style.display = 'block';
 
           const formData = new FormData(form);
 
-          // Envia os dados (POST) para o Google Apps Script usando 'fetch'
           fetch(SCRIPT_URL, {
             method: 'POST',
             body: formData
           })
-          .then(response => response.json()) // Converte a resposta do script em JSON
+          .then(response => response.json()) 
           .then(data => {
             if(data.result === 'success') {
-              // SUCESSO! O lead foi salvo.
-              // Redireciona o usuário para a calculadora (URL que o script enviou)
               window.location.href = data.redirectUrl;
             } else {
-              // Ocorreu um erro no Apps Script
               console.error('Erro no Script:', data.message);
               alert('Ocorreu um erro ao enviar seus dados. Tente novamente.');
-              // Libera o botão
               submitButton.disabled = false;
               submitButton.textContent = 'Acessar Calculadora Agora';
               loadingMessage.style.display = 'none';
             }
           })
           .catch(error => {
-            // Ocorreu um erro de rede (internet, URL errada, etc.)
             console.error('Erro de Conexão:', error);
             alert('Erro de conexão. Verifique sua internet e tente novamente.');
-            // Libera o botão
             submitButton.disabled = false;
             submitButton.textContent = 'Acessar Calculadora Agora';
             loadingMessage.style.display = 'none';
