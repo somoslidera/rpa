@@ -1,4 +1,11 @@
 {
+  "public": true,
+  "builds": [
+    {
+      "src": "reports/index.html",
+      "use": "@vercel/static-file"
+    }
+  ],
   "rewrites": [
     {
       "source": "/",
