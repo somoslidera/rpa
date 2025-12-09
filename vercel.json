@@ -4,14 +4,5 @@
       "source": "/",
       "destination": "/reports/index.html"
     }
-  ],
-  "builds": [
-    {
-      "src": "/reports/index.html",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "reports"
-      }
-    }
   ]
 }
