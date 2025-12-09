@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Performance - Roselaine Portal Advocacia</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configuração do Tailwind -->
+    <script>
+      tailwind.config = {
+        darkMode: 'class', // Habilita modo escuro via classe
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+                dark: {
+                    bg: '#0f172a',
+                    card: '#1e293b',
+                    text: '#f1f5f9',
+                    border: '#334155'
+                }
+            }
+          },
+        }
+      }
+    </script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <!-- html2pdf.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Fonte Inter e Ícones -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Transição suave para dark mode */
+        body, div, p, h1, h2, span, table, td, th {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        @media print {
+            .no-print { display: none !important; }
+            body { -webkit-print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-slate-900 dark:text-gray-100 p-4 sm:p-6 transition-colors duration-300">
+
+    <div id="app" class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Cabeçalho e Toggle Dark Mode -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-indigo-500 pb-4 mb-2">
+            <div>
+                <h1 class="text-3xl font-bold text-indigo-700 dark:text-indigo-400">Roselaine Portal Advocacia</h1>
+                <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mt-1">Painel de Performance em Tráfego Pago</h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 italic">Lidera Soluções - Por Rodrigo Ribas</p>
+            </div>
+            
+            <div class="flex items-center gap-4 mt-4 md:mt-0 no-print">
+                <!-- Botão Toggle Theme -->
+                <button onclick="toggleTheme()" class="p-2 rounded-full bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 transition focus:outline-none" title="Alternar Tema">
+                    <i id="theme-icon" class="fas fa-moon text-gray-700 dark:text-yellow-300 text-lg w-6 h-6 flex items-center justify-center"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Barra de Ferramentas: Filtros e Exportação (No Print) -->
+        <div class="no-print bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md flex flex-col lg:flex-row gap-4 justify-between items-center border border-gray-100 dark:border-slate-700">
+            <div class="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+                <!-- Filtro Mês -->
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-calendar text-gray-400"></i>
+                    </div>
+                    <select id="month-filter" class="pl-10 block w-full rounded-lg border-gray-300 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-sm focus:ring-indigo-500 focus:border-indigo-500 py-2.5">
+                        <option value="Todos">Todos os Meses</option>
+                    </select>
+                </div>
+                <!-- Filtro Campanha -->
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-bullhorn text-gray-400"></i>
+                    </div>
+                    <select id="campaign-filter" class="pl-10 block w-full rounded-lg border-gray-300 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-sm focus:ring-indigo-500 focus:border-indigo-500 py-2.5">
+                        <option value="Todas">Todas as Campanhas</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex gap-3 w-full lg:w-auto">
+                <button onclick="downloadCSV()" class="flex-1 lg:flex-none inline-flex justify-center items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition shadow-sm">
+                    <i class="fas fa-file-csv mr-2"></i> CSV
+                </button>
+                <button onclick="downloadPDF()" class="flex-1 lg:flex-none inline-flex justify-center items-center px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-600 text-sm font-medium rounded-lg transition shadow-sm">
+                    <i class="fas fa-file-pdf mr-2"></i> PDF
+                </button>
+            </div>
+        </div>
+
+        <!-- Seção: Totais e Médias (KPIs) -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="kpi-section">
+            <!-- Cards injetados via JS -->
+        </div>
+
+        <!-- Seção: Destaques (Melhor Mês/Campanha) e Gráfico Rosca -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Destaques -->
+            <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div id="best-month-card" class="bg-gradient-to-br from-indigo-50 to-white dark:from-slate-800 dark:to-slate-800 p-6 rounded-xl shadow border border-indigo-100 dark:border-slate-600 relative overflow-hidden">
+                    <!-- Injetado via JS -->
+                </div>
+                <div id="best-campaign-card" class="bg-gradient-to-br from-emerald-50 to-white dark:from-slate-800 dark:to-slate-800 p-6 rounded-xl shadow border border-emerald-100 dark:border-slate-600 relative overflow-hidden">
+                    <!-- Injetado via JS -->
+                </div>
+                <!-- Scorecard de CPA (Original) Movido para cá -->
+                <div id="cpa-scorecard" class="md:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-xl shadow border border-gray-100 dark:border-slate-700">
+                    <!-- Injetado via JS -->
+                </div>
+            </div>
+
+            <!-- Gráfico de Rosca (Top Vendas) -->
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow border border-gray-100 dark:border-slate-700 flex flex-col">
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4 text-center">Top 5 Campanhas (Vendas)</h3>
+                <div class="flex-grow relative h-80"> <!-- CORRIGIDO: Adicionado h-80 -->
+                    <canvas id="topCampaignsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção: Gráficos de Linha/Barra -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Investimento vs Vendas -->
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow border border-gray-100 dark:border-slate-700">
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">Investimento vs. Vendas</h3>
+                <div class="h-80"> <!-- CORRIGIDO: Adicionado h-80 para limitar a altura -->
+                    <canvas id="investimentoVendasChart"></canvas>
+                </div>
+            </div>
+            <!-- Leads vs Vendas -->
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow border border-gray-100 dark:border-slate-700">
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">Leads vs. Vendas</h3>
+                <div class="h-80"> <!-- CORRIGIDO: Adicionado h-80 para limitar a altura -->
+                    <canvas id="leadsVendasVolumeChart"></canvas>
+                </div>
+            </div>
+            <!-- Eficiência CPL/CPA -->
+            <div class="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-xl shadow border border-gray-100 dark:border-slate-700">
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">Eficiência de Custo (CPL & CPA)</h3>
+                <div class="h-96"> <!-- CORRIGIDO: Adicionado h-96 para limitar a altura (gráfico maior) -->
+                    <canvas id="custoEficienciaChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção: Tabela Resumo -->
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow border border-gray-100 dark:border-slate-700">
+            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">Resumo Mensal Consolidado</h3>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+                    <thead class="bg-gray-50 dark:bg-slate-700">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Mês</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Investimento</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Leads</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Vendas</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">CPL</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">CPA</th>
+                        </tr>
+                    </thead>
+                    <tbody id="data-table-body" class="divide-y divide-gray-200 dark:divide-slate-700 text-sm">
+                        <!-- JS Populate -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+         <!-- Seção: Tabela Detalhada -->
+         <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow border border-gray-100 dark:border-slate-700">
+            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">Detalhamento Completo (Por Campanha/Mês)</h3>
+            <div class="overflow-x-auto max-h-96">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+                    <thead class="bg-gray-50 dark:bg-slate-700 sticky top-0">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Mês</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Campanha</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Invest.</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Impr.</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Cliques</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Leads</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Vendas</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">CPL</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">CPA</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detailed-table-body" class="divide-y divide-gray-200 dark:divide-slate-700 text-sm">
+                        <!-- JS Populate -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // DADOS BRUTOS (Fonte Única da Verdade)
+        const rawDetailedData = [
+            { mes: 'ago/2025', campanha: 'Energia-PR', investimento: 198.73, impressoes: 13586, cliques: 117, leads: 22, vendas: 0, cpm: 14.63, cpc: 1.70, cpl: 9.03, cpa: NaN },
+            { mes: 'ago/2025', campanha: 'Energia-RS', investimento: 1041.71, impressoes: 109097, cliques: 967, leads: 374, vendas: 68, cpm: 9.55, cpc: 1.08, cpl: 2.79, cpa: 15.32 },
+            { mes: 'ago/2025', campanha: 'Energia-PE', investimento: 584.53, impressoes: 47714, cliques: 592, leads: 239, vendas: 25, cpm: 12.25, cpc: 0.99, cpl: 2.45, cpa: 23.38 },
+            { mes: 'set/2025', campanha: 'Energia-PR', investimento: 199.00, impressoes: 13568, cliques: 117, leads: 12, vendas: 0, cpm: 14.67, cpc: 1.70, cpl: 16.58, cpa: NaN },
+            { mes: 'set/2025', campanha: 'Energia-RS', investimento: 1919.00, impressoes: 209842, cliques: 1602, leads: 616, vendas: 146, cpm: 9.14, cpc: 1.20, cpl: 3.12, cpa: 13.14 },
+            { mes: 'set/2025', campanha: 'Energia-PE', investimento: 1278.00, impressoes: 115836, cliques: 1207, leads: 445, vendas: 67, cpm: 11.03, cpc: 1.06, cpl: 2.87, cpa: 19.07 },
+            { mes: 'out/2025', campanha: 'Energia-RS', investimento: 1541.72, impressoes: 184420, cliques: 1278, leads: 437, vendas: 120, cpm: 8.36, cpc: 1.21, cpl: 3.53, cpa: 12.85 },
+            { mes: 'out/2025', campanha: 'Energia-PE', investimento: 1961.61, impressoes: 187031, cliques: 1504, leads: 377, vendas: 50, cpm: 10.49, cpc: 1.30, cpl: 5.20, cpa: 39.23 },
+            { mes: 'out/2025', campanha: 'Veículo-RS', investimento: 1149.49, impressoes: 26634, cliques: 962, leads: 36, vendas: 0, cpm: 43.16, cpc: 1.19, cpl: 31.93, cpa: NaN },
+            { mes: 'out/2025', campanha: 'Empréstimo-RS', investimento: 1636.82, impressoes: 54544, cliques: 741, leads: 171, vendas: 1, cpm: 30.01, cpc: 2.21, cpl: 9.57, cpa: 1636.82 },
+            { mes: 'out/2025', campanha: 'Lia-RS', investimento: 66.78, impressoes: 7357, cliques: 83, leads: 62, vendas: 1, cpm: 9.08, cpc: 0.80, cpl: 1.08, cpa: 66.78 },
+            { mes: 'nov/2025', campanha: 'Energia-RS', investimento: 598.88, impressoes: 63238, cliques: 398, leads: 171, vendas: 100, cpm: 9.47, cpc: 1.50, cpl: 3.50, cpa: 5.99 },
+            { mes: 'nov/2025', campanha: 'Energia-PE', investimento: 718.22, impressoes: 64109, cliques: 723, leads: 387, vendas: 63, cpm: 11.20, cpc: 0.99, cpl: 1.86, cpa: 11.40 },
+            { mes: 'nov/2025', campanha: 'Crediário-RS', investimento: 352.77, impressoes: 12960, cliques: 176, leads: 37, vendas: 0, cpm: 27.22, cpc: 2.00, cpl: 9.53, cpa: NaN },
+            { mes: 'nov/2025', campanha: 'Veículo-RS', investimento: 420.97, impressoes: 54654, cliques: 960, leads: 4, vendas: 0, cpm: 7.70, cpc: 0.44, cpl: 105.24, cpa: NaN },
+            { mes: 'nov/2025', campanha: 'Lia-RS', investimento: 442.60, impressoes: 35008, cliques: 310, leads: 235, vendas: 17, cpm: 12.64, cpc: 1.43, cpl: 1.88, cpa: 26.04 },
+            { mes: 'nov/2025', campanha: 'Empréstimo-RS', investimento: 159.28, impressoes: 6933, cliques: 58, leads: 39, vendas: 0, cpm: 22.97, cpc: 2.75, cpl: 4.08, cpa: NaN }
+        ];
+
+        let chartInstances = {};
+        let isDarkMode = false;
+
+        // --- Helpers ---
+        const fmtBRL = (v) => (v || v===0) ? v.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}) : '-';
+        const fmtNum = (v) => (v || v===0) ? v.toLocaleString('pt-BR') : '-';
+        const getCpaColor = (cpa) => (!cpa || cpa >= 35) ? 'text-red-500 font-bold' : 'text-green-500 font-bold';
+        
+        // --- Dark Mode Logic ---
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.className = 'fas fa-moon text-gray-700 text-lg w-6 h-6 flex items-center justify-center';
+                isDarkMode = false;
+            } else {
+                html.classList.add('dark');
+                icon.className = 'fas fa-sun text-yellow-300 text-lg w-6 h-6 flex items-center justify-center';
+                isDarkMode = true;
+            }
+            // Re-renderizar gráficos para ajustar cores
+            updateReport(); 
+        }
+
+        // --- Core Logic ---
+        function getUniqueValues(key) {
+            return [...new Set(rawDetailedData.map(item => item[key]))].sort();
+        }
+
+        function populateFilters() {
+            const monthFilter = document.getElementById('month-filter');
+            const campaignFilter = document.getElementById('campaign-filter');
+            getUniqueValues('mes').forEach(m => monthFilter.add(new Option(m, m)));
+            getUniqueValues('campanha').forEach(c => campaignFilter.add(new Option(c, c)));
+        }
+
+        function getFilteredData() {
+            const m = document.getElementById('month-filter').value;
+            const c = document.getElementById('campaign-filter').value;
+            return rawDetailedData.filter(i => (m === 'Todos' || i.mes === m) && (c === 'Todas' || i.campanha === c));
+        }
+
+        function updateReport() {
+            const filtered = getFilteredData();
+            
+            // Agrupamento por Mês
+            const monthlyData = Object.values(filtered.reduce((acc, curr) => {
+                if (!acc[curr.mes]) acc[curr.mes] = { mes: curr.mes, inv: 0, leads: 0, vendas: 0 };
+                acc[curr.mes].inv += curr.investimento;
+                acc[curr.mes].leads += curr.leads;
+                acc[curr.mes].vendas += curr.vendas;
+                return acc;
+            }, {})).map(d => ({
+                ...d, 
+                cpl: d.leads ? d.inv/d.leads : 0, 
+                cpa: d.vendas ? d.inv/d.vendas : 0 
+            })).sort((a,b) => {
+                const order = ['ago/2025', 'set/2025', 'out/2025', 'nov/2025'];
+                return order.indexOf(a.mes) - order.indexOf(b.mes);
+            });
+
+            // Agrupamento por Campanha (para Rosca e Melhor Campanha)
+            const campaignData = Object.values(filtered.reduce((acc, curr) => {
+                if (!acc[curr.campanha]) acc[curr.campanha] = { campanha: curr.campanha, vendas: 0, inv: 0 };
+                acc[curr.campanha].vendas += curr.vendas;
+                acc[curr.campanha].inv += curr.investimento;
+                return acc;
+            }, {}));
+
+            // Atualizações Visuais
+            renderKPIGrid(monthlyData, filtered);
+            renderBestPerformers(monthlyData, campaignData);
+            renderScorecard(monthlyData);
+            renderCharts(monthlyData, campaignData);
+            renderSummaryTable(monthlyData);
+            renderDetailedTable(filtered);
+        }
+
+        // --- Renderers ---
+
+        function renderKPIGrid(monthly, filtered) {
+            const totalInv = filtered.reduce((s, i) => s + i.investimento, 0);
+            const totalSales = filtered.reduce((s, i) => s + i.vendas, 0);
+            const totalLeads = filtered.reduce((s, i) => s + i.leads, 0);
+            const monthsCount = monthly.length || 1;
+
+            const avgInv = totalInv / monthsCount;
+            const avgSales = totalSales / monthsCount;
+            const avgLeads = totalLeads / monthsCount;
+            const avgCPL = totalLeads ? totalInv / totalLeads : 0;
+            const avgCPA = totalSales ? totalInv / totalSales : 0;
+
+            const kpis = [
+                { label: 'Total Investido', val: fmtBRL(totalInv), icon: 'fa-money-bill-wave', color: 'text-indigo-600' },
+                { label: 'Média Invest. Mensal', val: fmtBRL(avgInv), icon: 'fa-chart-line', color: 'text-blue-500' },
+                { label: 'Vendas Totais', val: fmtNum(totalSales), icon: 'fa-shopping-cart', color: 'text-emerald-600' },
+                { label: 'Média Vendas Mensal', val: fmtNum(avgSales), icon: 'fa-cash-register', color: 'text-teal-500' },
+                { label: 'Leads Totais', val: fmtNum(totalLeads), icon: 'fa-users', color: 'text-cyan-600' },
+                { label: 'Média Leads Mensal', val: fmtNum(avgLeads), icon: 'fa-user-plus', color: 'text-sky-500' },
+                { label: 'CPL Médio', val: fmtBRL(avgCPL), icon: 'fa-filter', color: 'text-amber-600' },
+                { label: 'CPA Médio', val: fmtBRL(avgCPA), icon: 'fa-bullseye', color: getCpaColor(avgCPA).split(' ')[0] },
+            ];
+
+            const container = document.getElementById('kpi-section');
+            container.innerHTML = kpis.map(k => `
+                <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border-l-4 ${k.color.replace('text', 'border')} border-gray-100 dark:border-slate-700 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold">${k.label}</p>
+                        <p class="text-lg font-bold text-gray-800 dark:text-gray-100 mt-1">${k.val}</p>
+                    </div>
+                    <i class="fas ${k.icon} ${k.color} opacity-80 text-xl"></i>
+                </div>
+            `).join('');
+        }
+
+        function renderBestPerformers(monthly, campaignData) {
+            // Melhor Mês (por vendas)
+            const bestMonth = [...monthly].sort((a,b) => b.vendas - a.vendas)[0];
+            const bmCard = document.getElementById('best-month-card');
+            
+            if(bestMonth) {
+                bmCard.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm font-medium text-indigo-600 dark:text-indigo-300 mb-1">Melhor Mês (Vendas)</p>
+                            <h4 class="text-2xl font-bold text-gray-800 dark:text-white">${bestMonth.mes}</h4>
+                        </div>
+                        <div class="bg-indigo-100 dark:bg-indigo-900 p-2 rounded-lg">
+                            <i class="fas fa-calendar-check text-indigo-600 dark:text-indigo-300 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex gap-4">
+                        <div>
+                            <span class="block text-xs text-gray-500 dark:text-gray-400">Vendas</span>
+                            <span class="text-lg font-semibold text-gray-800 dark:text-gray-200">${fmtNum(bestMonth.vendas)}</span>
+                        </div>
+                        <div>
+                            <span class="block text-xs text-gray-500 dark:text-gray-400">CPA</span>
+                            <span class="text-lg font-semibold ${getCpaColor(bestMonth.cpa)}">${fmtBRL(bestMonth.cpa)}</span>
+                        </div>
+                    </div>
+                `;
+            } else { bmCard.innerHTML = '<p class="text-gray-500 text-sm">Sem dados</p>'; }
+
+            // Melhor Campanha (por vendas)
+            const bestCampaign = [...campaignData].sort((a,b) => b.vendas - a.vendas)[0];
+            const bcCard = document.getElementById('best-campaign-card');
+            
+            if(bestCampaign) {
+                const cpaCamp = bestCampaign.vendas ? bestCampaign.inv / bestCampaign.vendas : 0;
+                bcCard.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div class="overflow-hidden">
+                            <p class="text-sm font-medium text-emerald-600 dark:text-emerald-300 mb-1">Melhor Campanha</p>
+                            <h4 class="text-xl font-bold text-gray-800 dark:text-white truncate" title="${bestCampaign.campanha}">${bestCampaign.campanha}</h4>
+                        </div>
+                        <div class="bg-emerald-100 dark:bg-emerald-900 p-2 rounded-lg flex-shrink-0">
+                            <i class="fas fa-trophy text-emerald-600 dark:text-emerald-300 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex gap-4">
+                        <div>
+                            <span class="block text-xs text-gray-500 dark:text-gray-400">Vendas Totais</span>
+                            <span class="text-lg font-semibold text-gray-800 dark:text-gray-200">${fmtNum(bestCampaign.vendas)}</span>
+                        </div>
+                        <div>
+                            <span class="block text-xs text-gray-500 dark:text-gray-400">CPA Médio</span>
+                            <span class="text-lg font-semibold ${getCpaColor(cpaCamp)}">${fmtBRL(cpaCamp)}</span>
+                        </div>
+                    </div>
+                `;
+            } else { bcCard.innerHTML = '<p class="text-gray-500 text-sm">Sem dados</p>'; }
+        }
+
+        function renderScorecard(monthlyData) {
+            const div = document.getElementById('cpa-scorecard');
+            if (monthlyData.length === 0) { div.innerHTML = ''; return; }
+            
+            const curr = monthlyData[monthlyData.length - 1];
+            const prev = monthlyData.length >= 2 ? monthlyData[monthlyData.length - 2] : null;
+            
+            let deltaHtml = '<span class="text-gray-400 text-sm">Primeiro período</span>';
+            if (prev && prev.cpa > 0) {
+                const diff = (curr.cpa - prev.cpa) / prev.cpa;
+                const isGood = curr.cpa < prev.cpa;
+                const color = isGood ? 'text-green-500' : 'text-red-500';
+                const icon = isGood ? 'fa-arrow-down' : 'fa-arrow-up';
+                deltaHtml = `<span class="${color} font-bold flex items-center gap-1"><i class="fas ${icon}"></i> ${(Math.abs(diff)*100).toFixed(1)}%</span> <span class="text-gray-400 text-xs">vs. mês anterior</span>`;
+            }
+
+            div.innerHTML = `
+                <div class="flex flex-col h-full justify-between">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="text-gray-500 dark:text-gray-400 font-medium">CPA Atual (${curr.mes})</h3>
+                        <span class="text-xs px-2 py-1 rounded ${curr.cpa < 35 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">Meta: R$ 35,00</span>
+                    </div>
+                    <div>
+                        <div class="text-4xl font-bold ${getCpaColor(curr.cpa)} mb-1">${fmtBRL(curr.cpa)}</div>
+                        <div class="mt-1">${deltaHtml}</div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-gray-100 dark:border-slate-700">
+                        <p class="text-xs text-gray-400">O CPA é o principal indicador de saúde financeira da campanha.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderCharts(monthly, campaignData) {
+            // Configuração de Cores baseada no Tema
+            const txtColor = isDarkMode ? '#94a3b8' : '#64748b';
+            const gridColor = isDarkMode ? '#334155' : '#e2e8f0';
+
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false, // Necessário para controlar o tamanho via div pai (h-XX)
+                plugins: { legend: { labels: { color: txtColor } } },
+                scales: {
+                    x: { ticks: { color: txtColor }, grid: { color: gridColor } },
+                    y: { ticks: { color: txtColor }, grid: { color: gridColor } }
+                }
+            };
+
+            // 1. Investimento vs Vendas
+            if(chartInstances.invSales) chartInstances.invSales.destroy();
+            chartInstances.invSales = new Chart(document.getElementById('investimentoVendasChart'), {
+                type: 'bar',
+                data: {
+                    labels: monthly.map(d => d.mes),
+                    datasets: [
+                        { label: 'Investimento (R$)', data: monthly.map(d => d.inv), backgroundColor: '#6366f1', order: 2 },
+                        { label: 'Vendas', data: monthly.map(d => d.vendas), type: 'line', borderColor: '#f97316', backgroundColor: '#f97316', borderWidth: 2, tension: 0.3, yAxisID: 'y1', order: 1 }
+                    ]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        ...commonOptions.scales,
+                        y: { ...commonOptions.scales.y, title: {display:true, text:'R$', color: txtColor} },
+                        y1: { position: 'right', grid: {drawOnChartArea: false}, title: {display:true, text:'Qtd', color: txtColor}, ticks: {color: txtColor} }
+                    }
+                }
+            });
+
+            // 2. Leads vs Vendas
+            if(chartInstances.leadsSales) chartInstances.leadsSales.destroy();
+            chartInstances.leadsSales = new Chart(document.getElementById('leadsVendasVolumeChart'), {
+                type: 'bar',
+                data: {
+                    labels: monthly.map(d => d.mes),
+                    datasets: [
+                        { label: 'Leads', data: monthly.map(d => d.leads), backgroundColor: '#06b6d4' },
+                        { label: 'Vendas', data: monthly.map(d => d.vendas), backgroundColor: isDarkMode ? '#1e293b' : '#0f172a' } // Corrigido para tema escuro/claro
+                    ]
+                },
+                options: commonOptions
+            });
+
+            // 3. Eficiência (Line)
+            if(chartInstances.eff) chartInstances.eff.destroy();
+            chartInstances.eff = new Chart(document.getElementById('custoEficienciaChart'), {
+                type: 'line',
+                data: {
+                    labels: monthly.map(d => d.mes),
+                    datasets: [
+                        { label: 'CPL', data: monthly.map(d => d.cpl), borderColor: '#22c55e', backgroundColor: '#22c55e', tension: 0 },
+                        { label: 'CPA', data: monthly.map(d => d.cpa), borderColor: '#ef4444', backgroundColor: '#ef4444', tension: 0 }
+                    ]
+                },
+                options: commonOptions
+            });
+
+            // 4. TOP 5 Campanhas (Doughnut)
+            if(chartInstances.topCamp) chartInstances.topCamp.destroy();
+            
+            // Preparar dados: Ordenar por vendas, pegar top 5, agrupar resto
+            let sortedCamps = [...campaignData].sort((a,b) => b.vendas - a.vendas);
+            let labelsPie = [], dataPie = [];
+            
+            if (sortedCamps.length > 5) {
+                const top5 = sortedCamps.slice(0, 5);
+                const others = sortedCamps.slice(5).reduce((acc, c) => acc + c.vendas, 0);
+                labelsPie = top5.map(c => c.campanha);
+                dataPie = top5.map(c => c.vendas);
+                if(others > 0) { labelsPie.push('Outras'); dataPie.push(others); }
+            } else {
+                labelsPie = sortedCamps.map(c => c.campanha);
+                dataPie = sortedCamps.map(c => c.vendas);
+            }
+
+            chartInstances.topCamp = new Chart(document.getElementById('topCampaignsChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: labelsPie,
+                    datasets: [{
+                        data: dataPie,
+                        backgroundColor: ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#94a3b8'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: txtColor, boxWidth: 12, font: {size: 11} } }
+                    },
+                    layout: { padding: 10 }
+                }
+            });
+        }
+
+        // --- Tables ---
+        function renderSummaryTable(data) {
+            const tb = document.getElementById('data-table-body');
+            tb.innerHTML = data.map(d => `
+                <tr class="hover:bg-gray-50 dark:hover:bg-slate-700 transition">
+                    <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">${d.mes}</td>
+                    <td class="px-4 py-3 text-gray-600 dark:text-gray-300">${fmtBRL(d.inv)}</td>
+                    <td class="px-4 py-3 text-gray-600 dark:text-gray-300">${fmtNum(d.leads)}</td>
+                    <td class="px-4 py-3 text-gray-600 dark:text-gray-300">${fmtNum(d.vendas)}</td>
+                    <td class="px-4 py-3 text-green-600 font-medium">${fmtBRL(d.cpl)}</td>
+                    <td class="px-4 py-3 ${getCpaColor(d.cpa)}">${fmtBRL(d.cpa)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderDetailedTable(data) {
+            const tb = document.getElementById('detailed-table-body');
+            tb.innerHTML = data.map(d => `
+                <tr class="hover:bg-gray-50 dark:hover:bg-slate-700 transition border-b dark:border-slate-700 last:border-0">
+                    <td class="px-4 py-2 font-medium text-gray-900 dark:text-white">${d.mes}</td>
+                    <td class="px-4 py-2 text-gray-600 dark:text-gray-300 text-xs">${d.campanha}</td>
+                    <td class="px-4 py-2 text-gray-600 dark:text-gray-300">${fmtBRL(d.investimento)}</td>
+                    <td class="px-4 py-2 text-gray-500 dark:text-gray-400 text-xs">${fmtNum(d.impressoes)}</td>
+                    <td class="px-4 py-2 text-gray-500 dark:text-gray-400 text-xs">${fmtNum(d.cliques)}</td>
+                    <td class="px-4 py-2 text-gray-600 dark:text-gray-300">${fmtNum(d.leads)}</td>
+                    <td class="px-4 py-2 text-gray-600 dark:text-gray-300">${fmtNum(d.vendas)}</td>
+                    <td class="px-4 py-2 text-green-600 font-medium">${fmtBRL(d.cpl)}</td>
+                    <td class="px-4 py-2 ${getCpaColor(d.cpa)}">${fmtBRL(d.cpa)}</td>
+                </tr>
+            `).join('');
+        }
+
+        // --- Export ---
+        function downloadCSV() {
+            const data = getFilteredData();
+            if(!data.length) return alert('Sem dados');
+            let csv = "Mes;Campanha;Investimento;Leads;Vendas;CPL;CPA\n";
+            data.forEach(d => {
+                csv += `${d.mes};${d.campanha};${d.investimento.toFixed(2).replace('.', ',')};${d.leads};${d.vendas};${d.cpl.toFixed(2).replace('.', ',')};${(d.cpa||0).toFixed(2).replace('.', ',')}\n`;
+            });
+            const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "performance_ads.csv";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function downloadPDF() {
+            // Força tema claro para PDF
+            const wasDark = document.documentElement.classList.contains('dark');
+            if(wasDark) toggleTheme();
+
+            const el = document.getElementById('app');
+            const opt = {
+                margin: 5, filename: 'Performance_Roselaine_Portal.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            // Usar promise para garantir que o tema seja restaurado
+            html2pdf().set(opt).from(el).save().then(() => {
+                // Restaura tema se necessário
+                if(wasDark) toggleTheme();
+            });
+        }
+
+        // Init
+        document.getElementById('month-filter').addEventListener('change', updateReport);
+        document.getElementById('campaign-filter').addEventListener('change', updateReport);
+        window.onload = () => { 
+            // Inicializa tema baseado na preferência do sistema se não houver estado salvo
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.classList.add('dark');
+                isDarkMode = true;
+            } else {
+                document.documentElement.classList.remove('dark');
+                isDarkMode = false;
+            }
+            // Atualiza o ícone
+            document.getElementById('theme-icon').className = isDarkMode ? 'fas fa-sun text-yellow-300 text-lg w-6 h-6 flex items-center justify-center' : 'fas fa-moon text-gray-700 text-lg w-6 h-6 flex items-center justify-center';
+
+            populateFilters(); 
+            updateReport(); 
+        };
+
+        // Define as funções de download no escopo global para o onclick
+        window.downloadCSV = downloadCSV;
+        window.downloadPDF = downloadPDF;
+        window.toggleTheme = toggleTheme;
+    </script>
+</body>
+</html>
