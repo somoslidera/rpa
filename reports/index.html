@@ -41,9 +41,40 @@
         body, div, p, h1, h2, span, table, td, th {
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
+        /* Dark mode background - Céu noturno com degradê suave */
+        .dark body {
+            background: linear-gradient(180deg, #0a1628 0%, #0f1e33 25%, #1a2f47 50%, #0f1e33 75%, #0a1628 100%);
+            background-attachment: fixed;
+        }
+        .dark .bg-slate-900 {
+            background: linear-gradient(180deg, #0a1628 0%, #0f1e33 25%, #1a2f47 50%, #0f1e33 75%, #0a1628 100%);
+            background-attachment: fixed;
+        }
+        /* Cores customizadas Adventure Labs */
+        .text-cyan-500 { color: #00bcbc; }
+        .bg-cyan-500 { background-color: #00bcbc; }
+        .border-cyan-500 { border-color: #00bcbc; }
+        /* Gradiente Instagram-like (azul para vermelho) */
+        .gradient-instagram {
+            background: linear-gradient(45deg, #405de6, #5851db, #833ab4, #c13584, #e1306c, #fd1d1d);
+        }
         @media print {
             .no-print { display: none !important; }
             body { -webkit-print-color-adjust: exact; }
+        }
+        /* Estilos para PDF */
+        .page-break {
+            page-break-after: always;
+            break-after: page;
+        }
+        .avoid-break {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+        .pdf-section {
+            page-break-inside: avoid;
+            break-inside: avoid;
+            margin-bottom: 1rem;
         }
     </style>
 </head>
@@ -52,14 +83,16 @@
     <div id="app" class="max-w-7xl mx-auto space-y-6">
         
         <!-- Cabeçalho e Toggle Dark Mode -->
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-indigo-500 pb-4 mb-2">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-blue-500 pb-4 mb-2">
             <div>
-                <h1 class="text-3xl font-bold text-indigo-700 dark:text-indigo-400">Roselaine Portal Advocacia</h1>
+                <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-400">Roselaine Portal Advocacia</h1>
                 <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mt-1">Painel de Performance em Tráfego Pago</h2>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 italic">Lidera Soluções - Por Rodrigo Ribas</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 italic">Adventure Labs - Por Rodrigo Ribas</p>
             </div>
             
             <div class="flex items-center gap-4 mt-4 md:mt-0 no-print">
+                <!-- Logo Adventure Labs -->
+                <img id="adventure-logo" src="adventure-dark-1.png" alt="Adventure Labs" class="h-10 w-auto" />
                 <!-- Botão Toggle Theme -->
                 <button onclick="toggleTheme()" class="p-2 rounded-full bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 transition focus:outline-none" title="Alternar Tema">
                     <i id="theme-icon" class="fas fa-moon text-gray-700 dark:text-yellow-300 text-lg w-6 h-6 flex items-center justify-center"></i>
@@ -75,7 +108,7 @@
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fas fa-calendar text-gray-400"></i>
                     </div>
-                    <select id="month-filter" class="pl-10 block w-full rounded-lg border-gray-300 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-sm focus:ring-indigo-500 focus:border-indigo-500 py-2.5">
+                    <select id="month-filter" class="pl-10 block w-full rounded-lg border-gray-300 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-sm focus:ring-blue-500 focus:border-blue-500 py-2.5">
                         <option value="Todos">Todos os Meses</option>
                     </select>
                 </div>
@@ -84,14 +117,14 @@
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fas fa-bullhorn text-gray-400"></i>
                     </div>
-                    <select id="campaign-filter" class="pl-10 block w-full rounded-lg border-gray-300 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-sm focus:ring-indigo-500 focus:border-indigo-500 py-2.5">
+                    <select id="campaign-filter" class="pl-10 block w-full rounded-lg border-gray-300 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-sm focus:ring-blue-500 focus:border-blue-500 py-2.5">
                         <option value="Todas">Todas as Campanhas</option>
                     </select>
                 </div>
             </div>
 
             <div class="flex gap-3 w-full lg:w-auto">
-                <button onclick="downloadCSV()" class="flex-1 lg:flex-none inline-flex justify-center items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition shadow-sm">
+                <button onclick="downloadCSV()" class="flex-1 lg:flex-none inline-flex justify-center items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition shadow-sm">
                     <i class="fas fa-file-csv mr-2"></i> CSV
                 </button>
                 <button onclick="downloadPDF()" class="flex-1 lg:flex-none inline-flex justify-center items-center px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-600 text-sm font-medium rounded-lg transition shadow-sm">
@@ -101,7 +134,7 @@
         </div>
 
         <!-- Seção: Indicador de Eficiência (ROI/ROAS) -->
-        <div id="efficiency-indicator-section" class="bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-700 dark:to-purple-700 p-6 rounded-xl shadow-lg text-white">
+        <div id="efficiency-indicator-section" class="gradient-instagram p-6 rounded-xl shadow-lg text-white">
             <!-- Injetado via JS -->
         </div>
 
@@ -119,10 +152,10 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Destaques -->
             <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div id="best-month-card" class="bg-gradient-to-br from-indigo-50 to-white dark:from-slate-800 dark:to-slate-800 p-6 rounded-xl shadow border border-indigo-100 dark:border-slate-600 relative overflow-hidden">
+                <div id="best-month-card" class="bg-gradient-to-br from-blue-50 to-white dark:from-slate-800 dark:to-slate-800 p-6 rounded-xl shadow border border-blue-100 dark:border-slate-600 relative overflow-hidden">
                     <!-- Injetado via JS -->
                 </div>
-                <div id="best-campaign-card" class="bg-gradient-to-br from-emerald-50 to-white dark:from-slate-800 dark:to-slate-800 p-6 rounded-xl shadow border border-emerald-100 dark:border-slate-600 relative overflow-hidden">
+                <div id="best-campaign-card" class="bg-gradient-to-br from-red-50 to-white dark:from-slate-800 dark:to-slate-800 p-6 rounded-xl shadow border border-red-100 dark:border-slate-600 relative overflow-hidden">
                     <!-- Injetado via JS -->
                 </div>
                 <!-- Scorecard de CPA (Original) Movido para cá -->
@@ -256,7 +289,7 @@
         const fmtBRL = (v) => (v || v===0) ? v.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}) : '-';
         const fmtNum = (v) => (v || v===0) ? v.toLocaleString('pt-BR') : '-';
         const fmtPct = (v) => (v || v===0) ? (v * 100).toFixed(2).replace('.', ',') + '%' : '-';
-        const getCpaColor = (cpa) => (!cpa || cpa >= 35) ? 'text-red-500 font-bold' : 'text-green-500 font-bold';
+        const getCpaColor = (cpa) => (!cpa || cpa >= 35) ? 'text-red-500 font-bold' : 'text-cyan-500 font-bold';
         const CPA_META = 35; // Meta de CPA em R$
         
         // Função para calcular cor do mapa de calor
@@ -282,14 +315,17 @@
         function toggleTheme() {
             const html = document.documentElement;
             const icon = document.getElementById('theme-icon');
+            const logo = document.getElementById('adventure-logo');
             
             if (html.classList.contains('dark')) {
                 html.classList.remove('dark');
                 icon.className = 'fas fa-moon text-gray-700 text-lg w-6 h-6 flex items-center justify-center';
+                if (logo) logo.src = 'adventure-dark-1.png';
                 isDarkMode = false;
             } else {
                 html.classList.add('dark');
                 icon.className = 'fas fa-sun text-yellow-300 text-lg w-6 h-6 flex items-center justify-center';
+                if (logo) logo.src = 'adventure-light-1.png';
                 isDarkMode = true;
             }
             // Re-renderizar gráficos para ajustar cores
@@ -298,14 +334,31 @@
 
         // --- Core Logic ---
         function getUniqueValues(key) {
-            return [...new Set(rawDetailedData.map(item => item[key]))].sort();
+            return [...new Set(rawDetailedData.map(item => item[key]))];
         }
 
         function populateFilters() {
             const monthFilter = document.getElementById('month-filter');
             const campaignFilter = document.getElementById('campaign-filter');
-            getUniqueValues('mes').forEach(m => monthFilter.add(new Option(m, m)));
-            getUniqueValues('campanha').forEach(c => campaignFilter.add(new Option(c, c)));
+            
+            // Função para converter mês/ano em número ordenável
+            const monthToNumber = (monthStr) => {
+                const [month, year] = monthStr.split('/');
+                const monthMap = {
+                    'jan': 1, 'fev': 2, 'mar': 3, 'abr': 4, 'mai': 5, 'jun': 6,
+                    'jul': 7, 'ago': 8, 'set': 9, 'out': 10, 'nov': 11, 'dez': 12
+                };
+                const monthNum = monthMap[month.toLowerCase()] || 0;
+                return parseInt(year) * 100 + monthNum; // Ex: 2025 * 100 + 8 = 202508 para ago/2025
+            };
+            
+            // Ordenar meses por data (ano/mês)
+            const months = getUniqueValues('mes').sort((a, b) => monthToNumber(a) - monthToNumber(b));
+            months.forEach(m => monthFilter.add(new Option(m, m)));
+            
+            // Ordenar campanhas alfabeticamente
+            const campaigns = getUniqueValues('campanha').sort();
+            campaigns.forEach(c => campaignFilter.add(new Option(c, c)));
         }
 
         function getFilteredData() {
@@ -368,7 +421,7 @@
             
             // Calcular a porcentagem visual (limitar a 100% para a barra)
             const visualPercentage = Math.min(efficiency, 100);
-            const barColor = isGood ? 'bg-green-400' : 'bg-orange-400';
+            const barColor = isGood ? 'bg-cyan-500' : 'bg-orange-400';
             
             const container = document.getElementById('efficiency-indicator-section');
             container.innerHTML = `
@@ -430,24 +483,24 @@
                         <i class="fas fa-eye text-blue-500 opacity-80 text-2xl"></i>
                     </div>
                 </div>
-                <div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border-l-4 border-purple-500 dark:border-slate-700">
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border-l-4 border-red-500 dark:border-slate-700">
                     <div class="flex justify-between items-start mb-2">
                         <div>
                             <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold">CPC</p>
                             <p class="text-2xl font-bold text-gray-800 dark:text-gray-100 mt-1">${fmtBRL(cpc)}</p>
                             <p class="text-xs text-gray-400 mt-1">Custo por clique</p>
                         </div>
-                        <i class="fas fa-mouse-pointer text-purple-500 opacity-80 text-2xl"></i>
+                        <i class="fas fa-mouse-pointer text-red-500 opacity-80 text-2xl"></i>
                     </div>
                 </div>
-                <div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border-l-4 border-green-500 dark:border-slate-700">
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border-l-4 border-cyan-500 dark:border-slate-700">
                     <div class="flex justify-between items-start mb-2">
                         <div>
                             <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold">CTR</p>
                             <p class="text-2xl font-bold text-gray-800 dark:text-gray-100 mt-1">${ctr.toFixed(2)}%</p>
                             <p class="text-xs text-gray-400 mt-1">Taxa de clique</p>
                         </div>
-                        <i class="fas fa-chart-line text-green-500 opacity-80 text-2xl"></i>
+                        <i class="fas fa-chart-line text-cyan-500 opacity-80 text-2xl"></i>
                     </div>
                 </div>
             `;
@@ -467,11 +520,10 @@
             const overallRate = totalImpressoes > 0 ? (totalVendas / totalImpressoes) * 100 : 0;
             
             // Proporções visuais mais equilibradas para formar um funil (não totalmente realistas)
-            // Usando raiz quadrada para suavizar as diferenças
             const impWidth = 100;
-            const clickWidth = 75; // Aproximadamente baseado na taxa de conversão típica
-            const leadWidth = 50;  // Meio do caminho
-            const saleWidth = 25;  // Menor mas ainda visível
+            const clickWidth = 75;
+            const leadWidth = 60;  // Aumentado para ficar mais visível
+            const saleWidth = 30;  // Aumentado proporcionalmente
             
             // Alturas fixas para um funil mais uniforme
             const height = 80;
@@ -498,10 +550,10 @@
                             <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Cliques</span>
                             <div class="flex items-center gap-2">
                                 <span class="text-sm font-bold text-gray-800 dark:text-white">${fmtNum(totalCliques)}</span>
-                                <span class="text-xs bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded">${ctr.toFixed(2)}% CTR</span>
+                                <span class="text-xs bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 px-2 py-0.5 rounded">${ctr.toFixed(2)}% CTR</span>
                             </div>
                         </div>
-                        <div class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg transition-all duration-500 flex items-center justify-center text-white font-semibold shadow-md" 
+                        <div class="bg-gradient-to-r from-red-500 to-pink-600 rounded-lg transition-all duration-500 flex items-center justify-center text-white font-semibold shadow-md" 
                              style="width: ${clickWidth}%; max-width: 450px; height: ${height}px;">
                             ${fmtNum(totalCliques)}
                         </div>
@@ -514,11 +566,11 @@
                             <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Leads</span>
                             <div class="flex items-center gap-2">
                                 <span class="text-sm font-bold text-gray-800 dark:text-white">${fmtNum(totalLeads)}</span>
-                                <span class="text-xs bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-2 py-0.5 rounded">${leadRate.toFixed(2)}%</span>
+                                <span class="text-xs bg-cyan-100 dark:bg-cyan-900 text-cyan-700 dark:text-cyan-300 px-2 py-0.5 rounded">${leadRate.toFixed(2)}%</span>
                             </div>
                         </div>
-                        <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-lg transition-all duration-500 flex items-center justify-center text-white font-semibold shadow-md" 
-                             style="width: ${leadWidth}%; max-width: 300px; height: ${height}px;">
+                        <div class="bg-gradient-to-r from-cyan-500 to-cyan-600 rounded-lg transition-all duration-500 flex items-center justify-center text-white font-semibold shadow-md" 
+                             style="background: linear-gradient(135deg, #00bcbc 0%, #00a3a3 100%); width: ${leadWidth}%; max-width: 360px; height: ${height}px;">
                             ${fmtNum(totalLeads)}
                         </div>
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Taxa de conversão: ${leadRate.toFixed(2)}% (cliques → leads)</p>
@@ -530,16 +582,15 @@
                             <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Vendas</span>
                             <div class="flex items-center gap-2">
                                 <span class="text-sm font-bold text-gray-800 dark:text-white">${fmtNum(totalVendas)}</span>
-                                <span class="text-xs bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded">${saleRate.toFixed(2)}%</span>
+                                <span class="text-xs bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 px-2 py-0.5 rounded">${saleRate.toFixed(2)}%</span>
                             </div>
                         </div>
-                        <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-lg transition-all duration-500 flex items-center justify-center text-white font-semibold shadow-md" 
+                        <div class="bg-gradient-to-r from-red-500 to-red-600 rounded-lg transition-all duration-500 flex items-center justify-center text-white font-semibold shadow-md" 
                              style="width: ${saleWidth}%; max-width: 150px; height: ${height}px;">
                             ${fmtNum(totalVendas)}
                         </div>
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                            Taxa de conversão: ${saleRate.toFixed(2)}% (leads → vendas) | 
-                            Taxa geral: ${overallRate.toFixed(3)}% (impressões → vendas)
+                            Taxa de conversão: ${saleRate.toFixed(2)}% (leads → vendas)
                         </p>
                     </div>
                 </div>
@@ -559,12 +610,12 @@
             const avgCPA = totalSales ? totalInv / totalSales : 0;
 
             const kpis = [
-                { label: 'Total Investido', val: fmtBRL(totalInv), icon: 'fa-money-bill-wave', color: 'text-indigo-600' },
+                { label: 'Total Investido', val: fmtBRL(totalInv), icon: 'fa-money-bill-wave', color: 'text-blue-600' },
                 { label: 'Média Invest. Mensal', val: fmtBRL(avgInv), icon: 'fa-chart-line', color: 'text-blue-500' },
-                { label: 'Vendas Totais', val: fmtNum(totalSales), icon: 'fa-shopping-cart', color: 'text-emerald-600' },
-                { label: 'Média Vendas Mensal', val: fmtNum(avgSales), icon: 'fa-cash-register', color: 'text-teal-500' },
+                { label: 'Vendas Totais', val: fmtNum(totalSales), icon: 'fa-shopping-cart', color: 'text-red-600' },
+                { label: 'Média Vendas Mensal', val: fmtNum(avgSales), icon: 'fa-cash-register', color: 'text-red-500' },
                 { label: 'Leads Totais', val: fmtNum(totalLeads), icon: 'fa-users', color: 'text-cyan-600' },
-                { label: 'Média Leads Mensal', val: fmtNum(avgLeads), icon: 'fa-user-plus', color: 'text-sky-500' },
+                { label: 'Média Leads Mensal', val: fmtNum(avgLeads), icon: 'fa-user-plus', color: 'text-cyan-500' },
                 { label: 'CPL Médio', val: fmtBRL(avgCPL), icon: 'fa-filter', color: 'text-amber-600' },
                 { label: 'CPA Médio', val: fmtBRL(avgCPA), icon: 'fa-bullseye', color: getCpaColor(avgCPA).split(' ')[0] },
             ];
@@ -590,11 +641,11 @@
                 bmCard.innerHTML = `
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-sm font-medium text-indigo-600 dark:text-indigo-300 mb-1">Melhor Mês (Vendas)</p>
+                            <p class="text-sm font-medium text-blue-600 dark:text-blue-300 mb-1">Melhor Mês (Vendas)</p>
                             <h4 class="text-2xl font-bold text-gray-800 dark:text-white">${bestMonth.mes}</h4>
                         </div>
-                        <div class="bg-indigo-100 dark:bg-indigo-900 p-2 rounded-lg">
-                            <i class="fas fa-calendar-check text-indigo-600 dark:text-indigo-300 text-xl"></i>
+                        <div class="bg-blue-100 dark:bg-blue-900 p-2 rounded-lg">
+                            <i class="fas fa-calendar-check text-blue-600 dark:text-blue-300 text-xl"></i>
                         </div>
                     </div>
                     <div class="mt-4 flex gap-4">
@@ -619,11 +670,11 @@
                 bcCard.innerHTML = `
                     <div class="flex justify-between items-start">
                         <div class="overflow-hidden">
-                            <p class="text-sm font-medium text-emerald-600 dark:text-emerald-300 mb-1">Melhor Campanha</p>
+                            <p class="text-sm font-medium text-red-600 dark:text-red-300 mb-1">Melhor Campanha</p>
                             <h4 class="text-xl font-bold text-gray-800 dark:text-white truncate" title="${bestCampaign.campanha}">${bestCampaign.campanha}</h4>
                         </div>
-                        <div class="bg-emerald-100 dark:bg-emerald-900 p-2 rounded-lg flex-shrink-0">
-                            <i class="fas fa-trophy text-emerald-600 dark:text-emerald-300 text-xl"></i>
+                        <div class="bg-red-100 dark:bg-red-900 p-2 rounded-lg flex-shrink-0">
+                            <i class="fas fa-trophy text-red-600 dark:text-red-300 text-xl"></i>
                         </div>
                     </div>
                     <div class="mt-4 flex gap-4">
@@ -652,7 +703,7 @@
                 const diff = curr.cpa - prev.cpa;
                 const diffPct = (diff / prev.cpa) * 100;
                 const isGood = curr.cpa < prev.cpa;
-                const color = isGood ? 'text-green-500' : 'text-red-500';
+                const color = isGood ? 'text-cyan-500' : 'text-red-500';
                 const icon = isGood ? 'fa-arrow-down' : 'fa-arrow-up';
                 deltaHtml = `
                     <div class="flex flex-col gap-1">
@@ -670,7 +721,7 @@
                 <div class="flex flex-col h-full justify-between">
                     <div class="flex justify-between items-center mb-2">
                         <h3 class="text-gray-500 dark:text-gray-400 font-medium">CPA Atual (${curr.mes})</h3>
-                        <span class="text-xs px-2 py-1 rounded ${curr.cpa < 35 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">Meta: R$ 35,00</span>
+                        <span class="text-xs px-2 py-1 rounded ${curr.cpa < 35 ? 'bg-cyan-100 text-cyan-800' : 'bg-red-100 text-red-800'}">Meta: R$ 35,00</span>
                     </div>
                     <div>
                         <div class="text-4xl font-bold ${getCpaColor(curr.cpa)} mb-1">${fmtBRL(curr.cpa)}</div>
@@ -711,7 +762,7 @@
 
             // 1. Investimento vs Vendas
             const canvasInv = document.getElementById('investimentoVendasChart');
-            const invVendasGradient = createGradientForCanvas(canvasInv, '#6366f1', '#4f46e5');
+            const invVendasGradient = createGradientForCanvas(canvasInv, '#3b82f6', '#2563eb');
             if(chartInstances.invSales) chartInstances.invSales.destroy();
             chartInstances.invSales = new Chart(canvasInv, {
                 type: 'bar',
@@ -728,8 +779,8 @@
                             label: 'Vendas', 
                             data: monthly.map(d => d.vendas), 
                             type: 'line', 
-                            borderColor: '#f97316', 
-                            backgroundColor: 'rgba(249, 115, 22, 0.1)', 
+                            borderColor: '#ef4444', 
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)', 
                             borderWidth: 3, 
                             tension: 0.3, 
                             yAxisID: 'y1', 
@@ -752,7 +803,7 @@
 
             // 2. Leads vs Vendas (Barras para Leads, Linha para Vendas)
             const canvasLeads = document.getElementById('leadsVendasVolumeChart');
-            const leadsGradient = createGradientForCanvas(canvasLeads, '#06b6d4', '#0891b2');
+            const leadsGradient = createGradientForCanvas(canvasLeads, '#00bcbc', '#00a3a3');
             if(chartInstances.leadsSales) chartInstances.leadsSales.destroy();
             chartInstances.leadsSales = new Chart(canvasLeads, {
                 type: 'bar',
@@ -829,13 +880,13 @@
                         { 
                             label: 'CPL', 
                             data: monthly.map(d => d.cpl), 
-                            borderColor: '#22c55e', 
-                            backgroundColor: 'rgba(34, 197, 94, 0.1)', 
+                            borderColor: '#00bcbc', 
+                            backgroundColor: 'rgba(0, 188, 188, 0.1)', 
                             tension: 0.4,
                             borderWidth: 3,
                             pointRadius: 5,
                             pointHoverRadius: 7,
-                            pointBackgroundColor: '#22c55e',
+                            pointBackgroundColor: '#00bcbc',
                             pointBorderColor: '#ffffff',
                             pointBorderWidth: 2,
                             fill: true
@@ -902,7 +953,7 @@
 
             // Criar gradientes para o gráfico de rosca
             const canvasTop = document.getElementById('topCampaignsChart');
-            const colors = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#94a3b8'];
+            const colors = ['#3b82f6', '#ec4899', '#f59e0b', '#00bcbc', '#2563eb', '#ef4444'];
             
             chartInstances.topCamp = new Chart(canvasTop, {
                 type: 'doughnut',
@@ -949,7 +1000,7 @@
                     <td class="px-4 py-3 text-gray-600 dark:text-gray-300" style="${getHeatMapColor(d.inv, invMin, invMax, isDarkMode)}">${fmtBRL(d.inv)}</td>
                     <td class="px-4 py-3 text-gray-600 dark:text-gray-300" style="${getHeatMapColor(d.leads, leadsMin, leadsMax, isDarkMode)}">${fmtNum(d.leads)}</td>
                     <td class="px-4 py-3 text-gray-600 dark:text-gray-300" style="${getHeatMapColor(d.vendas, vendasMin, vendasMax, isDarkMode)}">${fmtNum(d.vendas)}</td>
-                    <td class="px-4 py-3 text-green-600 font-medium" style="${d.cpl > 0 ? getHeatMapColor(d.cpl, cplMin, cplMax, isDarkMode) : ''}">${fmtBRL(d.cpl)}</td>
+                    <td class="px-4 py-3 text-cyan-600 font-medium" style="${d.cpl > 0 ? getHeatMapColor(d.cpl, cplMin, cplMax, isDarkMode) : ''}">${fmtBRL(d.cpl)}</td>
                     <td class="px-4 py-3 ${getCpaColor(d.cpa)}" style="${d.cpa > 0 ? getHeatMapColor(d.cpa, cpaMin, cpaMax, isDarkMode) : ''}">${fmtBRL(d.cpa)}</td>
                 </tr>
             `).join('');
@@ -1021,19 +1072,19 @@
                 // Linha de cabeçalho do mês (sempre visível, clicável)
                 const monthId = `month-${monthIndex}`;
                 html += `
-                    <tr class="bg-indigo-50 dark:bg-indigo-900 bg-opacity-50 hover:bg-indigo-100 dark:hover:bg-indigo-800 cursor-pointer border-b-2 border-indigo-300 dark:border-indigo-600" 
+                    <tr class="bg-blue-50 dark:bg-blue-900 bg-opacity-50 hover:bg-blue-100 dark:hover:bg-blue-800 cursor-pointer border-b-2 border-blue-300 dark:border-blue-600" 
                         onclick="toggleGroup('${monthId}')">
-                        <td class="px-4 py-3 font-bold text-indigo-700 dark:text-indigo-300">
+                        <td class="px-4 py-3 font-bold text-blue-700 dark:text-blue-300">
                             <i class="fas fa-chevron-down transition-transform duration-200" id="icon-${monthId}"></i>
                             <span class="ml-2">${mes}</span>
                         </td>
-                        <td class="px-4 py-3 font-bold text-indigo-700 dark:text-indigo-300">TOTAL DO MÊS</td>
-                        <td class="px-4 py-3 font-bold text-indigo-700 dark:text-indigo-300" style="${getHeatMapColor(monthTotals.investimento, invMin, invMax, isDarkMode)}">${fmtBRL(monthTotals.investimento)}</td>
-                        <td class="px-4 py-3 font-bold text-indigo-700 dark:text-indigo-300 text-xs" style="${getHeatMapColor(monthTotals.impressoes, impMin, impMax, isDarkMode)}">${fmtNum(monthTotals.impressoes)}</td>
-                        <td class="px-4 py-3 font-bold text-indigo-700 dark:text-indigo-300 text-xs" style="${getHeatMapColor(monthTotals.cliques, clickMin, clickMax, isDarkMode)}">${fmtNum(monthTotals.cliques)}</td>
-                        <td class="px-4 py-3 font-bold text-indigo-700 dark:text-indigo-300" style="${getHeatMapColor(monthTotals.leads, leadsMin, leadsMax, isDarkMode)}">${fmtNum(monthTotals.leads)}</td>
-                        <td class="px-4 py-3 font-bold text-indigo-700 dark:text-indigo-300" style="${getHeatMapColor(monthTotals.vendas, vendasMin, vendasMax, isDarkMode)}">${fmtNum(monthTotals.vendas)}</td>
-                        <td class="px-4 py-3 font-bold text-green-600 dark:text-green-400" style="${monthCPL > 0 ? getHeatMapColor(monthCPL, cplMin, cplMax, isDarkMode) : ''}">${fmtBRL(monthCPL)}</td>
+                        <td class="px-4 py-3 font-bold text-blue-700 dark:text-blue-300">TOTAL DO MÊS</td>
+                        <td class="px-4 py-3 font-bold text-blue-700 dark:text-blue-300" style="${getHeatMapColor(monthTotals.investimento, invMin, invMax, isDarkMode)}">${fmtBRL(monthTotals.investimento)}</td>
+                        <td class="px-4 py-3 font-bold text-blue-700 dark:text-blue-300 text-xs" style="${getHeatMapColor(monthTotals.impressoes, impMin, impMax, isDarkMode)}">${fmtNum(monthTotals.impressoes)}</td>
+                        <td class="px-4 py-3 font-bold text-blue-700 dark:text-blue-300 text-xs" style="${getHeatMapColor(monthTotals.cliques, clickMin, clickMax, isDarkMode)}">${fmtNum(monthTotals.cliques)}</td>
+                        <td class="px-4 py-3 font-bold text-blue-700 dark:text-blue-300" style="${getHeatMapColor(monthTotals.leads, leadsMin, leadsMax, isDarkMode)}">${fmtNum(monthTotals.leads)}</td>
+                        <td class="px-4 py-3 font-bold text-blue-700 dark:text-blue-300" style="${getHeatMapColor(monthTotals.vendas, vendasMin, vendasMax, isDarkMode)}">${fmtNum(monthTotals.vendas)}</td>
+                        <td class="px-4 py-3 font-bold text-cyan-600 dark:text-cyan-400" style="${monthCPL > 0 ? getHeatMapColor(monthCPL, cplMin, cplMax, isDarkMode) : ''}">${fmtBRL(monthCPL)}</td>
                         <td class="px-4 py-3 font-bold ${getCpaColor(monthCPA)}" style="${monthCPA > 0 ? getHeatMapColor(monthCPA, cpaMin, cpaMax, isDarkMode) : ''}">${fmtBRL(monthCPA)}</td>
                     </tr>
                 `;
@@ -1072,7 +1123,7 @@
                             <td class="px-4 py-2 font-semibold text-blue-700 dark:text-blue-300 text-xs" style="${getHeatMapColor(campTotals.cliques, clickMin, clickMax, isDarkMode)}">${fmtNum(campTotals.cliques)}</td>
                             <td class="px-4 py-2 font-semibold text-blue-700 dark:text-blue-300" style="${getHeatMapColor(campTotals.leads, leadsMin, leadsMax, isDarkMode)}">${fmtNum(campTotals.leads)}</td>
                             <td class="px-4 py-2 font-semibold text-blue-700 dark:text-blue-300" style="${getHeatMapColor(campTotals.vendas, vendasMin, vendasMax, isDarkMode)}">${fmtNum(campTotals.vendas)}</td>
-                            <td class="px-4 py-2 font-semibold text-green-600 dark:text-green-400" style="${campCPL > 0 ? getHeatMapColor(campCPL, cplMin, cplMax, isDarkMode) : ''}">${fmtBRL(campCPL)}</td>
+                            <td class="px-4 py-2 font-semibold text-cyan-600 dark:text-cyan-400" style="${campCPL > 0 ? getHeatMapColor(campCPL, cplMin, cplMax, isDarkMode) : ''}">${fmtBRL(campCPL)}</td>
                             <td class="px-4 py-2 font-semibold ${getCpaColor(campCPA)}" style="${campCPA > 0 ? getHeatMapColor(campCPA, cpaMin, cpaMax, isDarkMode) : ''}">${fmtBRL(campCPA)}</td>
                         </tr>
                     `;
@@ -1088,7 +1139,7 @@
                                 <td class="px-4 py-2 text-gray-500 dark:text-gray-400 text-xs" style="${getHeatMapColor(item.cliques, clickMin, clickMax, isDarkMode)}">${fmtNum(item.cliques)}</td>
                                 <td class="px-4 py-2 text-gray-600 dark:text-gray-300" style="${getHeatMapColor(item.leads, leadsMin, leadsMax, isDarkMode)}">${fmtNum(item.leads)}</td>
                                 <td class="px-4 py-2 text-gray-600 dark:text-gray-300" style="${getHeatMapColor(item.vendas, vendasMin, vendasMax, isDarkMode)}">${fmtNum(item.vendas)}</td>
-                                <td class="px-4 py-2 text-green-600 font-medium" style="${item.cpl > 0 ? getHeatMapColor(item.cpl, cplMin, cplMax, isDarkMode) : ''}">${fmtBRL(item.cpl)}</td>
+                                <td class="px-4 py-2 text-cyan-600 font-medium" style="${item.cpl > 0 ? getHeatMapColor(item.cpl, cplMin, cplMax, isDarkMode) : ''}">${fmtBRL(item.cpl)}</td>
                                 <td class="px-4 py-2 ${getCpaColor(item.cpa)}" style="${item.cpa > 0 ? getHeatMapColor(item.cpa, cpaMin, cpaMax, isDarkMode) : ''}">${fmtBRL(item.cpa)}</td>
                             </tr>
                         `;
@@ -1181,22 +1232,72 @@
         }
 
         function downloadPDF() {
-            // Força tema claro para PDF
-            const wasDark = document.documentElement.classList.contains('dark');
-            if(wasDark) toggleTheme();
+            // Verificar se html2pdf está disponível
+            if (typeof html2pdf === 'undefined') {
+                alert('Biblioteca de PDF não carregada. Aguarde alguns segundos e tente novamente.');
+                console.error('html2pdf não está disponível');
+                return;
+            }
 
-            const el = document.getElementById('app');
-            const opt = {
-                margin: 5, filename: 'Performance_Roselaine_Portal.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-            // Usar promise para garantir que o tema seja restaurado
-            html2pdf().set(opt).from(el).save().then(() => {
-                // Restaura tema se necessário
+            try {
+                // Força tema claro para PDF
+                const wasDark = document.documentElement.classList.contains('dark');
                 if(wasDark) toggleTheme();
-            });
+
+                // Aguardar um pouco para o tema mudar e garantir que tudo está renderizado
+                setTimeout(() => {
+                    try {
+                        const el = document.getElementById('app');
+                        if (!el) {
+                            alert('Erro: elemento não encontrado');
+                            if(wasDark) toggleTheme();
+                            return;
+                        }
+                        
+                        const opt = {
+                            margin: [10, 10, 10, 10],
+                            filename: 'Performance_Roselaine_Portal.pdf',
+                            image: { type: 'jpeg', quality: 0.92 },
+                            html2canvas: { 
+                                scale: 1.5,
+                                useCORS: true,
+                                letterRendering: true,
+                                logging: false,
+                                backgroundColor: '#ffffff',
+                                allowTaint: false,
+                                scrollX: 0,
+                                scrollY: -window.scrollY
+                            },
+                            jsPDF: { 
+                                unit: 'mm', 
+                                format: 'a4', 
+                                orientation: 'portrait',
+                                compress: true
+                            },
+                            pagebreak: { 
+                                mode: ['avoid-all', 'css', 'legacy'],
+                                avoid: ['table', 'tr', 'thead', 'tbody']
+                            }
+                        };
+                        
+                        html2pdf().set(opt).from(el).save().then(() => {
+                            console.log('PDF gerado com sucesso');
+                            if(wasDark) toggleTheme();
+                        }).catch(err => {
+                            console.error('Erro ao gerar PDF:', err);
+                            alert('Erro ao gerar PDF: ' + (err.message || 'Erro desconhecido. Verifique o console (F12) para mais detalhes.'));
+                            if(wasDark) toggleTheme();
+                        });
+                    } catch(e) {
+                        console.error('Erro interno ao gerar PDF:', e);
+                        alert('Erro ao gerar PDF: ' + e.message);
+                        if(wasDark) toggleTheme();
+                    }
+                }, 500);
+            } catch(err) {
+                console.error('Erro na função downloadPDF:', err);
+                alert('Erro ao iniciar geração de PDF: ' + err.message);
+            }
         }
 
         // Init
@@ -1204,12 +1305,15 @@
         document.getElementById('campaign-filter').addEventListener('change', updateReport);
         window.onload = () => { 
             // Inicializa tema baseado na preferência do sistema se não houver estado salvo
+            const logo = document.getElementById('adventure-logo');
             if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                 document.documentElement.classList.add('dark');
                 isDarkMode = true;
+                if (logo) logo.src = 'adventure-light-1.png';
             } else {
                 document.documentElement.classList.remove('dark');
                 isDarkMode = false;
+                if (logo) logo.src = 'adventure-dark-1.png';
             }
             // Atualiza o ícone
             document.getElementById('theme-icon').className = isDarkMode ? 'fas fa-sun text-yellow-300 text-lg w-6 h-6 flex items-center justify-center' : 'fas fa-moon text-gray-700 text-lg w-6 h-6 flex items-center justify-center';
