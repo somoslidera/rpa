@@ -100,8 +100,18 @@
             </div>
         </div>
 
+        <!-- Seção: Indicador de Eficiência (ROI/ROAS) -->
+        <div id="efficiency-indicator-section" class="bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-700 dark:to-purple-700 p-6 rounded-xl shadow-lg text-white">
+            <!-- Injetado via JS -->
+        </div>
+
         <!-- Seção: Totais e Médias (KPIs) -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="kpi-section">
+            <!-- Cards injetados via JS -->
+        </div>
+
+        <!-- Seção: Scorecards CPM, CPC, CTR -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="metrics-scorecards">
             <!-- Cards injetados via JS -->
         </div>
 
@@ -152,6 +162,14 @@
                 <div class="h-96"> <!-- CORRIGIDO: Adicionado h-96 para limitar a altura (gráfico maior) -->
                     <canvas id="custoEficienciaChart"></canvas>
                 </div>
+            </div>
+        </div>
+
+        <!-- Seção: Funil Acumulado -->
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow border border-gray-100 dark:border-slate-700">
+            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">Funil de Marketing Acumulado</h3>
+            <div id="funnel-section" class="space-y-4">
+                <!-- Injetado via JS -->
             </div>
         </div>
 
@@ -224,7 +242,11 @@
             { mes: 'nov/2025', campanha: 'Crediário-RS', investimento: 352.77, impressoes: 12960, cliques: 176, leads: 37, vendas: 0, cpm: 27.22, cpc: 2.00, cpl: 9.53, cpa: NaN },
             { mes: 'nov/2025', campanha: 'Veículo-RS', investimento: 420.97, impressoes: 54654, cliques: 960, leads: 4, vendas: 0, cpm: 7.70, cpc: 0.44, cpl: 105.24, cpa: NaN },
             { mes: 'nov/2025', campanha: 'Lia-RS', investimento: 442.60, impressoes: 35008, cliques: 310, leads: 235, vendas: 17, cpm: 12.64, cpc: 1.43, cpl: 1.88, cpa: 26.04 },
-            { mes: 'nov/2025', campanha: 'Empréstimo-RS', investimento: 159.28, impressoes: 6933, cliques: 58, leads: 39, vendas: 0, cpm: 22.97, cpc: 2.75, cpl: 4.08, cpa: NaN }
+            { mes: 'nov/2025', campanha: 'Empréstimo-RS', investimento: 159.28, impressoes: 6933, cliques: 58, leads: 39, vendas: 0, cpm: 22.97, cpc: 2.75, cpl: 4.08, cpa: NaN },
+            { mes: 'dez/2025', campanha: 'Empréstimo-RS', investimento: 1200.34, impressoes: 75563, cliques: 629, leads: 437, vendas: 24, cpm: 15.89, cpc: 1.91, cpl: 2.75, cpa: 50.01 },
+            { mes: 'dez/2025', campanha: 'Energia-RS', investimento: 1092.89, impressoes: 95386, cliques: 624, leads: 420, vendas: 130, cpm: 11.46, cpc: 1.75, cpl: 2.60, cpa: 8.41 },
+            { mes: 'dez/2025', campanha: 'Lia-RS', investimento: 472.44, impressoes: 35102, cliques: 281, leads: 297, vendas: 21, cpm: 13.46, cpc: 1.68, cpl: 1.59, cpa: 22.50 },
+            { mes: 'dez/2025', campanha: 'Post Carro', investimento: 103.42, impressoes: 3258, cliques: 14, leads: 9, vendas: 0, cpm: 31.74, cpc: 7.39, cpl: 11.49, cpa: NaN }
         ];
 
         let chartInstances = {};
@@ -233,7 +255,9 @@
         // --- Helpers ---
         const fmtBRL = (v) => (v || v===0) ? v.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}) : '-';
         const fmtNum = (v) => (v || v===0) ? v.toLocaleString('pt-BR') : '-';
+        const fmtPct = (v) => (v || v===0) ? (v * 100).toFixed(2).replace('.', ',') + '%' : '-';
         const getCpaColor = (cpa) => (!cpa || cpa >= 35) ? 'text-red-500 font-bold' : 'text-green-500 font-bold';
+        const CPA_META = 35; // Meta de CPA em R$
         
         // --- Dark Mode Logic ---
         function toggleTheme() {
@@ -286,7 +310,7 @@
                 cpl: d.leads ? d.inv/d.leads : 0, 
                 cpa: d.vendas ? d.inv/d.vendas : 0 
             })).sort((a,b) => {
-                const order = ['ago/2025', 'set/2025', 'out/2025', 'nov/2025'];
+                const order = ['ago/2025', 'set/2025', 'out/2025', 'nov/2025', 'dez/2025'];
                 return order.indexOf(a.mes) - order.indexOf(b.mes);
             });
 
@@ -299,15 +323,208 @@
             }, {}));
 
             // Atualizações Visuais
+            renderEfficiencyIndicator(filtered);
             renderKPIGrid(monthlyData, filtered);
+            renderMetricsScorecards(filtered);
             renderBestPerformers(monthlyData, campaignData);
             renderScorecard(monthlyData);
+            renderFunnel(filtered);
             renderCharts(monthlyData, campaignData);
             renderSummaryTable(monthlyData);
             renderDetailedTable(filtered);
         }
 
         // --- Renderers ---
+
+        function renderEfficiencyIndicator(filtered) {
+            const totalInv = filtered.reduce((s, i) => s + i.investimento, 0);
+            const totalSales = filtered.reduce((s, i) => s + i.vendas, 0);
+            const totalCPA = totalSales ? totalInv / totalSales : 0;
+            
+            // Eficiência = (Meta CPA / CPA Real) * 100%
+            // Se CPA < 35, eficiência > 100% (superou a meta)
+            // Se CPA > 35, eficiência < 100% (abaixo da meta)
+            const efficiency = totalCPA > 0 ? (CPA_META / totalCPA) * 100 : 0;
+            const isGood = efficiency >= 100;
+            
+            const container = document.getElementById('efficiency-indicator-section');
+            container.innerHTML = `
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="flex-1">
+                        <p class="text-sm opacity-90 mb-1">Eficiência de Investimento vs. Meta</p>
+                        <h2 class="text-3xl font-bold mb-2">${efficiency.toFixed(1)}%</h2>
+                        <p class="text-sm opacity-80">
+                            Meta: ${fmtBRL(CPA_META)} por venda | 
+                            Real: ${fmtBRL(totalCPA)} por venda
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-center">
+                            <p class="text-2xl font-bold">${fmtNum(totalSales)}</p>
+                            <p class="text-xs opacity-80">Vendas Totais</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-2xl font-bold">${fmtBRL(totalInv)}</p>
+                            <p class="text-xs opacity-80">Investimento Total</p>
+                        </div>
+                        <div class="bg-white dark:bg-slate-800 bg-opacity-20 p-3 rounded-lg">
+                            <i class="fas ${isGood ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'} text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 w-full bg-white dark:bg-slate-800 bg-opacity-20 rounded-full h-3">
+                    <div class="bg-white h-3 rounded-full transition-all duration-500" 
+                         style="width: ${Math.min(efficiency, 200)}%"></div>
+                </div>
+            `;
+        }
+
+        function renderMetricsScorecards(filtered) {
+            const totalImpressoes = filtered.reduce((s, i) => s + i.impressoes, 0);
+            const totalCliques = filtered.reduce((s, i) => s + i.cliques, 0);
+            const totalInvestimento = filtered.reduce((s, i) => s + i.investimento, 0);
+            
+            // CPM = (Investimento / Impressões) * 1000
+            const cpm = totalImpressoes > 0 ? (totalInvestimento / totalImpressoes) * 1000 : 0;
+            
+            // CPC = Investimento / Cliques
+            const cpc = totalCliques > 0 ? totalInvestimento / totalCliques : 0;
+            
+            // CTR = (Cliques / Impressões) * 100
+            const ctr = totalImpressoes > 0 ? (totalCliques / totalImpressoes) * 100 : 0;
+            
+            const container = document.getElementById('metrics-scorecards');
+            container.innerHTML = `
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border-l-4 border-blue-500 dark:border-slate-700">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold">CPM</p>
+                            <p class="text-2xl font-bold text-gray-800 dark:text-gray-100 mt-1">${fmtBRL(cpm)}</p>
+                            <p class="text-xs text-gray-400 mt-1">Custo por 1.000 impressões</p>
+                        </div>
+                        <i class="fas fa-eye text-blue-500 opacity-80 text-2xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border-l-4 border-purple-500 dark:border-slate-700">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold">CPC</p>
+                            <p class="text-2xl font-bold text-gray-800 dark:text-gray-100 mt-1">${fmtBRL(cpc)}</p>
+                            <p class="text-xs text-gray-400 mt-1">Custo por clique</p>
+                        </div>
+                        <i class="fas fa-mouse-pointer text-purple-500 opacity-80 text-2xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border-l-4 border-green-500 dark:border-slate-700">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold">CTR</p>
+                            <p class="text-2xl font-bold text-gray-800 dark:text-gray-100 mt-1">${ctr.toFixed(2)}%</p>
+                            <p class="text-xs text-gray-400 mt-1">Taxa de clique</p>
+                        </div>
+                        <i class="fas fa-chart-line text-green-500 opacity-80 text-2xl"></i>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderFunnel(filtered) {
+            // Calcular totais acumulados
+            const totalImpressoes = filtered.reduce((s, i) => s + i.impressoes, 0);
+            const totalCliques = filtered.reduce((s, i) => s + i.cliques, 0);
+            const totalLeads = filtered.reduce((s, i) => s + i.leads, 0);
+            const totalVendas = filtered.reduce((s, i) => s + i.vendas, 0);
+            
+            // Calcular taxas de conversão
+            const ctr = totalImpressoes > 0 ? (totalCliques / totalImpressoes) * 100 : 0;
+            const leadRate = totalCliques > 0 ? (totalLeads / totalCliques) * 100 : 0;
+            const saleRate = totalLeads > 0 ? (totalVendas / totalLeads) * 100 : 0;
+            const overallRate = totalImpressoes > 0 ? (totalVendas / totalImpressoes) * 100 : 0;
+            
+            // Calcular proporções relativas para visualização (máximo = 100%)
+            const maxValue = totalImpressoes;
+            const impWidth = 100;
+            const clickWidth = (totalCliques / maxValue) * 100;
+            const leadWidth = (totalLeads / maxValue) * 100;
+            const saleWidth = (totalVendas / maxValue) * 100;
+            
+            // Alturas proporcionais (base mínimo 60px, máximo 120px)
+            const minHeight = 60;
+            const maxHeight = 120;
+            const impHeight = maxHeight;
+            const clickHeight = minHeight + ((totalCliques / maxValue) * (maxHeight - minHeight));
+            const leadHeight = minHeight + ((totalLeads / maxValue) * (maxHeight - minHeight));
+            const saleHeight = minHeight + ((totalVendas / maxValue) * (maxHeight - minHeight));
+            
+            const container = document.getElementById('funnel-section');
+            container.innerHTML = `
+                <div class="flex flex-col items-center space-y-3">
+                    <!-- Impressões -->
+                    <div class="w-full">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Impressões</span>
+                            <span class="text-sm font-bold text-gray-800 dark:text-white">${fmtNum(totalImpressoes)}</span>
+                        </div>
+                        <div class="bg-blue-500 rounded-lg transition-all duration-500 flex items-center justify-center text-white font-semibold" 
+                             style="width: ${impWidth}%; height: ${impHeight}px;">
+                            ${fmtNum(totalImpressoes)}
+                        </div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 ml-1">Base inicial</p>
+                    </div>
+                    
+                    <!-- Cliques -->
+                    <div class="w-full">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Cliques</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm font-bold text-gray-800 dark:text-white">${fmtNum(totalCliques)}</span>
+                                <span class="text-xs bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded">${ctr.toFixed(2)}% CTR</span>
+                            </div>
+                        </div>
+                        <div class="bg-purple-500 rounded-lg transition-all duration-500 flex items-center justify-center text-white font-semibold" 
+                             style="width: ${clickWidth}%; height: ${clickHeight}px;">
+                            ${fmtNum(totalCliques)}
+                        </div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 ml-1">Taxa de conversão: ${ctr.toFixed(2)}%</p>
+                    </div>
+                    
+                    <!-- Leads -->
+                    <div class="w-full">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Leads</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm font-bold text-gray-800 dark:text-white">${fmtNum(totalLeads)}</span>
+                                <span class="text-xs bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-2 py-0.5 rounded">${leadRate.toFixed(2)}%</span>
+                            </div>
+                        </div>
+                        <div class="bg-green-500 rounded-lg transition-all duration-500 flex items-center justify-center text-white font-semibold" 
+                             style="width: ${leadWidth}%; height: ${leadHeight}px;">
+                            ${fmtNum(totalLeads)}
+                        </div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 ml-1">Taxa de conversão: ${leadRate.toFixed(2)}% (cliques → leads)</p>
+                    </div>
+                    
+                    <!-- Vendas -->
+                    <div class="w-full">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Vendas</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm font-bold text-gray-800 dark:text-white">${fmtNum(totalVendas)}</span>
+                                <span class="text-xs bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded">${saleRate.toFixed(2)}%</span>
+                            </div>
+                        </div>
+                        <div class="bg-emerald-500 rounded-lg transition-all duration-500 flex items-center justify-center text-white font-semibold" 
+                             style="width: ${saleWidth}%; height: ${saleHeight}px;">
+                            ${fmtNum(totalVendas)}
+                        </div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 ml-1">
+                            Taxa de conversão: ${saleRate.toFixed(2)}% (leads → vendas) | 
+                            Taxa geral: ${overallRate.toFixed(3)}% (impressões → vendas)
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
 
         function renderKPIGrid(monthly, filtered) {
             const totalInv = filtered.reduce((s, i) => s + i.investimento, 0);
@@ -556,20 +773,189 @@
 
         function renderDetailedTable(data) {
             const tb = document.getElementById('detailed-table-body');
-            tb.innerHTML = data.map(d => `
-                <tr class="hover:bg-gray-50 dark:hover:bg-slate-700 transition border-b dark:border-slate-700 last:border-0">
-                    <td class="px-4 py-2 font-medium text-gray-900 dark:text-white">${d.mes}</td>
-                    <td class="px-4 py-2 text-gray-600 dark:text-gray-300 text-xs">${d.campanha}</td>
-                    <td class="px-4 py-2 text-gray-600 dark:text-gray-300">${fmtBRL(d.investimento)}</td>
-                    <td class="px-4 py-2 text-gray-500 dark:text-gray-400 text-xs">${fmtNum(d.impressoes)}</td>
-                    <td class="px-4 py-2 text-gray-500 dark:text-gray-400 text-xs">${fmtNum(d.cliques)}</td>
-                    <td class="px-4 py-2 text-gray-600 dark:text-gray-300">${fmtNum(d.leads)}</td>
-                    <td class="px-4 py-2 text-gray-600 dark:text-gray-300">${fmtNum(d.vendas)}</td>
-                    <td class="px-4 py-2 text-green-600 font-medium">${fmtBRL(d.cpl)}</td>
-                    <td class="px-4 py-2 ${getCpaColor(d.cpa)}">${fmtBRL(d.cpa)}</td>
-                </tr>
-            `).join('');
+            
+            // Agrupar dados por mês e depois por campanha
+            const groupedByMonth = data.reduce((acc, item) => {
+                if (!acc[item.mes]) {
+                    acc[item.mes] = {};
+                }
+                if (!acc[item.mes][item.campanha]) {
+                    acc[item.mes][item.campanha] = [];
+                }
+                acc[item.mes][item.campanha].push(item);
+                return acc;
+            }, {});
+
+            // Ordenar meses
+            const monthOrder = ['ago/2025', 'set/2025', 'out/2025', 'nov/2025', 'dez/2025'];
+            const sortedMonths = Object.keys(groupedByMonth).sort((a, b) => {
+                return monthOrder.indexOf(a) - monthOrder.indexOf(b);
+            });
+
+            let html = '';
+            sortedMonths.forEach((mes, monthIndex) => {
+                const monthData = groupedByMonth[mes];
+                const campaigns = Object.keys(monthData);
+                
+                // Calcular totais do mês
+                const monthTotals = campaigns.reduce((totals, camp) => {
+                    monthData[camp].forEach(item => {
+                        totals.investimento += item.investimento;
+                        totals.impressoes += item.impressoes;
+                        totals.cliques += item.cliques;
+                        totals.leads += item.leads;
+                        totals.vendas += item.vendas;
+                    });
+                    return totals;
+                }, { investimento: 0, impressoes: 0, cliques: 0, leads: 0, vendas: 0 });
+                
+                const monthCPL = monthTotals.leads ? monthTotals.investimento / monthTotals.leads : 0;
+                const monthCPA = monthTotals.vendas ? monthTotals.investimento / monthTotals.vendas : 0;
+                
+                // Linha de cabeçalho do mês (sempre visível, clicável)
+                const monthId = `month-${monthIndex}`;
+                html += `
+                    <tr class="bg-indigo-50 dark:bg-indigo-900 bg-opacity-50 hover:bg-indigo-100 dark:hover:bg-indigo-800 cursor-pointer border-b-2 border-indigo-300 dark:border-indigo-600" 
+                        onclick="toggleGroup('${monthId}')">
+                        <td class="px-4 py-3 font-bold text-indigo-700 dark:text-indigo-300">
+                            <i class="fas fa-chevron-down transition-transform duration-200" id="icon-${monthId}"></i>
+                            <span class="ml-2">${mes}</span>
+                        </td>
+                        <td class="px-4 py-3 font-bold text-indigo-700 dark:text-indigo-300">TOTAL DO MÊS</td>
+                        <td class="px-4 py-3 font-bold text-indigo-700 dark:text-indigo-300">${fmtBRL(monthTotals.investimento)}</td>
+                        <td class="px-4 py-3 font-bold text-indigo-700 dark:text-indigo-300 text-xs">${fmtNum(monthTotals.impressoes)}</td>
+                        <td class="px-4 py-3 font-bold text-indigo-700 dark:text-indigo-300 text-xs">${fmtNum(monthTotals.cliques)}</td>
+                        <td class="px-4 py-3 font-bold text-indigo-700 dark:text-indigo-300">${fmtNum(monthTotals.leads)}</td>
+                        <td class="px-4 py-3 font-bold text-indigo-700 dark:text-indigo-300">${fmtNum(monthTotals.vendas)}</td>
+                        <td class="px-4 py-3 font-bold text-green-600 dark:text-green-400">${fmtBRL(monthCPL)}</td>
+                        <td class="px-4 py-3 font-bold ${getCpaColor(monthCPA)}">${fmtBRL(monthCPA)}</td>
+                    </tr>
+                `;
+                
+                // Agrupar campanhas do mês
+                campaigns.forEach((campanha, campIndex) => {
+                    const campaignData = monthData[campanha];
+                    
+                    // Calcular totais da campanha
+                    const campTotals = campaignData.reduce((totals, item) => {
+                        totals.investimento += item.investimento;
+                        totals.impressoes += item.impressoes;
+                        totals.cliques += item.cliques;
+                        totals.leads += item.leads;
+                        totals.vendas += item.vendas;
+                        return totals;
+                    }, { investimento: 0, impressoes: 0, cliques: 0, leads: 0, vendas: 0 });
+                    
+                    const campCPL = campTotals.leads ? campTotals.investimento / campTotals.leads : 0;
+                    const campCPA = campTotals.vendas ? campTotals.investimento / campTotals.vendas : 0;
+                    
+                    const campId = `${monthId}-camp-${campIndex}`;
+                    
+                    // Linha de cabeçalho da campanha (dentro do mês, colapsável)
+                    html += `
+                        <tr class="group-month-${monthId} bg-blue-50 dark:bg-blue-900 bg-opacity-30 hover:bg-blue-100 dark:hover:bg-blue-800 cursor-pointer transition-colors" 
+                            onclick="toggleGroup('${campId}', event)">
+                            <td class="px-4 py-2 pl-8 text-gray-600 dark:text-gray-400">
+                                <i class="fas fa-chevron-right transition-transform duration-200 text-xs" id="icon-${campId}"></i>
+                            </td>
+                            <td class="px-4 py-2 font-semibold text-blue-700 dark:text-blue-300 text-xs">
+                                ${campanha}
+                            </td>
+                            <td class="px-4 py-2 font-semibold text-blue-700 dark:text-blue-300">${fmtBRL(campTotals.investimento)}</td>
+                            <td class="px-4 py-2 font-semibold text-blue-700 dark:text-blue-300 text-xs">${fmtNum(campTotals.impressoes)}</td>
+                            <td class="px-4 py-2 font-semibold text-blue-700 dark:text-blue-300 text-xs">${fmtNum(campTotals.cliques)}</td>
+                            <td class="px-4 py-2 font-semibold text-blue-700 dark:text-blue-300">${fmtNum(campTotals.leads)}</td>
+                            <td class="px-4 py-2 font-semibold text-blue-700 dark:text-blue-300">${fmtNum(campTotals.vendas)}</td>
+                            <td class="px-4 py-2 font-semibold text-green-600 dark:text-green-400">${fmtBRL(campCPL)}</td>
+                            <td class="px-4 py-2 font-semibold ${getCpaColor(campCPA)}">${fmtBRL(campCPA)}</td>
+                        </tr>
+                    `;
+                    
+                    // Linhas de detalhes da campanha (colapsáveis)
+                    campaignData.forEach(item => {
+                        html += `
+                            <tr class="group-month-${monthId} group-camp-${campId} hover:bg-gray-50 dark:hover:bg-slate-700 transition border-b dark:border-slate-700">
+                                <td class="px-4 py-2 pl-12 text-gray-500 dark:text-gray-400 text-xs">${item.mes}</td>
+                                <td class="px-4 py-2 pl-8 text-gray-600 dark:text-gray-300 text-xs">${item.campanha}</td>
+                                <td class="px-4 py-2 text-gray-600 dark:text-gray-300">${fmtBRL(item.investimento)}</td>
+                                <td class="px-4 py-2 text-gray-500 dark:text-gray-400 text-xs">${fmtNum(item.impressoes)}</td>
+                                <td class="px-4 py-2 text-gray-500 dark:text-gray-400 text-xs">${fmtNum(item.cliques)}</td>
+                                <td class="px-4 py-2 text-gray-600 dark:text-gray-300">${fmtNum(item.leads)}</td>
+                                <td class="px-4 py-2 text-gray-600 dark:text-gray-300">${fmtNum(item.vendas)}</td>
+                                <td class="px-4 py-2 text-green-600 font-medium">${fmtBRL(item.cpl)}</td>
+                                <td class="px-4 py-2 ${getCpaColor(item.cpa)}">${fmtBRL(item.cpa)}</td>
+                            </tr>
+                        `;
+                    });
+                });
+            });
+            
+            tb.innerHTML = html;
+            
+            // Inicializar todos os grupos como expandidos
+            // As linhas começam como display: table-row por padrão no CSS inline
         }
+
+        // Função global para expandir/colapsar grupos
+        function toggleGroup(groupId, event) {
+            if (event) {
+                event.stopPropagation(); // Prevenir propagação do clique
+            }
+            
+            const icon = document.getElementById(`icon-${groupId}`);
+            const isMonthGroup = groupId.startsWith('month-') && !groupId.includes('camp-');
+            
+            if (isMonthGroup) {
+                // Toggle de mês: mostra/oculta todas as campanhas e seus detalhes
+                const rows = document.querySelectorAll(`.group-month-${groupId}`);
+                let isExpanded = true;
+                
+                // Verificar se está expandido (primeira linha visível)
+                if (rows.length > 0) {
+                    const firstRow = rows[0];
+                    const computedStyle = window.getComputedStyle(firstRow);
+                    isExpanded = computedStyle.display !== 'none';
+                }
+                
+                rows.forEach(row => {
+                    row.style.display = isExpanded ? 'none' : 'table-row';
+                });
+                
+                // Rotacionar ícone
+                if (icon) {
+                    icon.style.transform = isExpanded ? 'rotate(-90deg)' : 'rotate(0deg)';
+                }
+            } else {
+                // Toggle de campanha: mostra/oculta apenas os detalhes da campanha
+                const rows = document.querySelectorAll(`.group-camp-${groupId}`);
+                let isExpanded = true;
+                
+                // Verificar se está expandido
+                if (rows.length > 0) {
+                    const firstRow = rows[0];
+                    const computedStyle = window.getComputedStyle(firstRow);
+                    isExpanded = computedStyle.display !== 'none';
+                }
+                
+                rows.forEach(row => {
+                    row.style.display = isExpanded ? 'none' : 'table-row';
+                });
+                
+                // Rotacionar ícone (direita quando colapsado, baixo quando expandido)
+                if (icon) {
+                    if (isExpanded) {
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-right');
+                    } else {
+                        icon.classList.remove('fa-chevron-right');
+                        icon.classList.add('fa-chevron-down');
+                    }
+                }
+            }
+        }
+        
+        // Expor função globalmente
+        window.toggleGroup = toggleGroup;
 
         // --- Export ---
         function downloadCSV() {
